@@ -19,7 +19,7 @@ public:
 	void OnNext(T value) override;
 
 private:
-	T _last = T();
+	std::set<T> _seen;
 	bool _any = false;
 };
 
@@ -31,10 +31,12 @@ OperatorDistinct<T>::OperatorDistinct()
 template <typename T>
 void OperatorDistinct<T>::OnNext(T value)
 {
-	if (!_any || (_any && _last != value))
+	if (!_any || (_any && _seen.find(value) == _seen.end()))
+	{
+		_seen.insert(value);
 		this->_childObservers.OnNext(value);
+	}
 
-	_last = value;
 	_any = true;
 }
 

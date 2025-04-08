@@ -1,0 +1,37 @@
+{
+    "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
+    "name": "ReactiveArduino",
+    "description": "ReactiveArduino implements observable-observer pattern on a processor like Arduino",
+    "keywords": [
+        "Reactive",
+        "Arduino",
+        "Observer",
+        "Observable",
+        "Event"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/rzeldent/Arduino-ReactiveArduino"
+    },
+    "frameworks": [
+        "arduino"
+    ],
+    "platforms": "*",
+    "build": {
+        "srcDir": "src/",
+        "includeDir": "include/"
+    },
+    "version": "2.0.0",
+    "authors": [
+        {
+            "name": "Luis Llamas",
+            "maintainer": true
+        },
+        {
+            "name": "Rene Zeldenthuis",
+            "maintainer": true
+        }
+
+    ],
+    "category": "Other"
+}

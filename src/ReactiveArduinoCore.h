@@ -50,6 +50,7 @@ template <typename T> class FilterIsZero;
 
 template <typename T> class OperatorWhere;
 template <typename T> class OperatorDistinct;
+template <typename T> class OperatorDistinctUntilChanged;
 template <typename T> class OperatorLast;
 template <typename T> class OperatorFirst;
 template <typename T> class OperatorTake;
@@ -154,6 +155,7 @@ public:
 	// "Fluent" behavior
 	OperatorWhere<T>& Where(ReactivePredicate<T> condition);
 	OperatorDistinct<T>& Distinct();
+	OperatorDistinctUntilChanged<T>& DistinctUntilChanged();
 	OperatorFirst<T>& First();
 	OperatorLast<T>& Last();
 	OperatorSkip<T>& Skip(size_t num);
@@ -262,6 +264,14 @@ template <typename T>
 auto Observable<T>::Distinct() -> OperatorDistinct<T>&
 {
 	auto newOp = new OperatorDistinct<T>();
+	Compound(*this, *newOp);
+	return *newOp;
+}
+
+template <typename T>
+auto Observable<T>::DistinctUntilChanged() -> OperatorDistinctUntilChanged<T>&
+{
+	auto newOp = new OperatorDistinctUntilChanged<T>();
 	Compound(*this, *newOp);
 	return *newOp;
 }
