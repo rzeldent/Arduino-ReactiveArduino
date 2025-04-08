@@ -56,6 +56,7 @@ template <typename T> class OperatorFirst;
 template <typename T> class OperatorTake;
 template <typename T> class OperatorSkip;
 template <typename T> class OperatorBatch;
+template <typename T> class OperatorBufferCount;
 template <typename T> class OperatorTakeAt;
 template <typename T> class OperatorTakeFirst;
 template <typename T> class OperatorTakeLast;
@@ -168,6 +169,7 @@ public:
 	OperatorTakeUntil<T>& TakeUntil(ReactivePredicate<T> condition);
 	OperatorTakeWhile<T>& TakeWhile(ReactivePredicate<T> condition);
 	OperatorBatch<T>& Batch(size_t num);
+	OperatorBufferCount<T>& BufferCount(size_t num);
 	OperatorIf<T>& If(ReactivePredicate<T> condition, ReactiveAction<T> action);
 	OperatorForEach<T>& ForEach(ReactiveAction<T> action);
 	OperatorTimeoutMillis<T>& TimeoutMillis(ReactiveAction<T> action);
@@ -374,6 +376,14 @@ template <typename T>
 auto Observable<T>::Batch(size_t num) -> OperatorBatch<T>&
 {
 	auto newOp = new OperatorBatch<T>(num);
+	Compound(*this, *newOp);
+	return *newOp;
+}
+
+template <typename T>
+auto Observable<T>::BufferCount(size_t num) -> OperatorBufferCount<T>&
+{
+	auto newOp = new OperatorBufferCount<T>(num);
 	Compound(*this, *newOp);
 	return *newOp;
 }
