@@ -39,5 +39,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #include "TransformationToBool.h"
 #include "TransformationParseFloat.h"
 #include "TransformationParseInt.h"
+
+// New extended transformations
+#include "TransformationInterpolate.h"
+
 #endif
 

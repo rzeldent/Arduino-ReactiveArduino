@@ -17,25 +17,62 @@ public:
 	OperatorDistinct();
 
 	void OnNext(T value) override;
+	void Reset() override;
 
 private:
-	T _last = T();
-	bool _any = false;
+	static const size_t MAX_DISTINCT_VALUES = 32; // Configurable limit for Arduino memory constraints
+	T _seenValues[MAX_DISTINCT_VALUES];
+	size_t _seenCount;
+	
+	bool hasSeenValue(T value);
+	void addValue(T value);
 };
 
 template <typename T>
 OperatorDistinct<T>::OperatorDistinct()
 {
+	_seenCount = 0;
 }
 
 template <typename T>
 void OperatorDistinct<T>::OnNext(T value)
 {
-	if (!_any || (_any && _last != value))
+	if (!hasSeenValue(value))
+	{
+		addValue(value);
 		this->_childObservers.OnNext(value);
+	}
+}
 
-	_last = value;
-	_any = true;
+template <typename T>
+void OperatorDistinct<T>::Reset()
+{
+	_seenCount = 0;
+}
+
+template <typename T>
+bool OperatorDistinct<T>::hasSeenValue(T value)
+{
+	for (size_t i = 0; i < _seenCount; i++)
+	{
+		if (_seenValues[i] == value)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+template <typename T>
+void OperatorDistinct<T>::addValue(T value)
+{
+	if (_seenCount < MAX_DISTINCT_VALUES)
+	{
+		_seenValues[_seenCount] = value;
+		_seenCount++;
+	}
+	// If we exceed the limit, we stop tracking new values
+	// This is a memory-conscious approach for Arduino
 }
 
 #endif

@@ -36,4 +36,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #include "FilterIsNotZero.h"
 #include "FilterIsZero.h"
 
+// New extended filters
+#include "FilterHysteresis.h"
+#include "FilterKalman.h"
+#include "FilterPID.h"
+
 #endif

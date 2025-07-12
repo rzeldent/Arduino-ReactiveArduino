@@ -36,4 +36,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #include "ObservableSerialFloat.h"
 #include "ObservableSerialDouble.h"
 
+// New extended observables
+#include "ObservableAccelerometer.h"
+#include "ObservableUltrasonic.h"
+#include "ObservableRotaryEncoder.h"
+
 #endif

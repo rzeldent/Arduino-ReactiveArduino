@@ -224,6 +224,12 @@ namespace Reactive
 	}
 
 	template <typename T>
+	OperatorDistinctUntilChanged<T>& DistinctUntilChanged()
+	{
+		return *(new OperatorDistinctUntilChanged<T>());
+	}
+
+	template <typename T>
 	OperatorFirst<T>& First()
 	{
 		return *(new OperatorFirst<T>());

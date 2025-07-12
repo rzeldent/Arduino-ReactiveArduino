@@ -12,6 +12,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #include "OperatorWhere.h"
 #include "OperatorDistinct.h"
+#include "OperatorDistinctUntilChanged.h"
 
 #include "OperatorLast.h"
 #include "OperatorFirst.h"
@@ -39,5 +40,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #include "OperatorNoReset.h"
 #include "OperatorReset.h"
+
+// New extended operators
+#include "OperatorThrottle.h"
+#include "OperatorScan.h"
+#include "OperatorStartWith.h"
+#include "OperatorDebounce.h"
 
 #endif
