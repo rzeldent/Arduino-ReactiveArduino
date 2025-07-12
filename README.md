@@ -10,7 +10,7 @@ This fork includes powerful new reactive extensions with comprehensive operator 
 
 ### 🔧 Advanced Operators
 - **`Select()`** - Transform values with custom mapping functions
-- **`Distinct()`** - Filter out duplicate values from stream
+- **`Distinct()`** - Filter out ALL duplicate values (global uniqueness)
 - **`DistinctUntilChanged()`** - Emit only when value changes from previous
 - **`Scan()`** - Accumulate values with intermediate emissions
 - **`Reduce()`** - Accumulate to final result only
@@ -79,68 +79,20 @@ More examples in Wiki/[Examples](https://github.com/luisllamasbinaburo/Arduino-R
 ### Observable, observers and operators legend
 More info about the Observables, Observers, and Operators available in the [Wiki](https://github.com/luisllamasbinaburo/Arduino-ReactiveArduino/wiki)
 
-```
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                        🔄 REACTIVE ARDUINO COMPONENT LEGEND 🔄                      │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  📡 OBSERVABLES (Data Sources)                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ • FromArray()        • FromProperty()     • FromSerial()                    │   │
-│  │ • FromRange()        • AnalogInput()      • DigitalInput()                  │   │
-│  │ • TimerMillis()      • TimerMicros()      • IntervalMillis()                │   │
-│  │ • Property<T>()      • ManualDefer()      • IntervalMicros()                │   │
-│  │ • Accelerometer()    • Ultrasonic()       • RotaryEncoder()                 │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                 ⬇️                                                  │
-│  🔧 OPERATORS (Data Processing)                                                    │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ • Where()            • Distinct()         • DistinctUntilChanged()          │   │
-│  │ • First()            • Last()             • Skip() / Take()                 │   │
-│  │ • SkipWhile()        • TakeWhile()        • SkipUntil() / TakeUntil()       │   │
-│  │ • Batch()            • Repeat()           • Loop()                          │   │
-│  │ • StartWith()        • Throttle()         • Debounce()                      │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                 ⬇️                                                  │
-│  🔄 TRANSFORMATIONS (Data Conversion)                                              │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ • Select()           • Map<T>()           • Cast<T>()                       │   │
-│  │ • SelectTo<T>()      • Scan()             • Reduce()                        │   │
-│  │ • Scale()            • Interpolate()      • Limit() / LimitUpper()          │   │
-│  │ • Millis()           • Micros()           • Timestamp()                     │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                 ⬇️                                                  │
-│  🌡️ FILTERS (Conditional Processing)                                               │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ • IsEqual()          • IsNotEqual()       • IsGreater() / IsLess()          │   │
-│  │ • IsZero()           • IsNotZero()        • OnRising() / OnFalling()        │   │
-│  │ • DebounceMillis()   • LowPass()          • HighPass()                      │   │
-│  │ • MovingAverage()    • Median3/5()        • WindowMillis()                  │   │
-│  │ • Kalman()           • Hysteresis()       • PID()                           │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                 ⬇️                                                  │
-│  📊 AGGREGATES (Statistical Operations)                                            │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ • Count()            • CountDown()        • Sum()                           │   │
-│  │ • Min() / Max()      • Average()          • RMS()                           │   │
-│  │ • Any()              • All()              • None()                          │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                 ⬇️                                                  │
-│  🎯 OBSERVERS (Data Consumers)                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ • Do()               • Finally()          • DoAndFinally()                  │   │
-│  │ • ToSerial()         • ToProperty()       • ToArray()                       │   │
-│  │ • ToDigitalOutput()  • ToAnalogOutput()   • ToCircularBuffer()              │   │
-│  │ • DoNothing()        • (Custom Actions)                                     │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                     │
-│  💡 USAGE PATTERN: Observable → [Operators] → [Transformations] → [Filters] →     │
-│                    [Aggregates] → Observer                                         │
-│                                                                                     │
-│  Example: FromArray(data, size).Where(condition).Select(transform).ToSerial()      │
-│                                                                                     │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-```
+## REACTIVE ARDUINO COMPONENT LEGEND
+
+| Component Type | Available Methods |
+|----------------|-------------------|
+| **OBSERVABLES (Data Sources)** | FromArray(), FromProperty(), FromSerial(), FromRange(), AnalogInput(), DigitalInput(), TimerMillis(), TimerMicros(), IntervalMillis(), Property<T>(), ManualDefer(), IntervalMicros(), Accelerometer(), Ultrasonic(), RotaryEncoder() |
+| **OPERATORS (Data Processing)** | Where(), Distinct(), DistinctUntilChanged(), First(), Last(), Skip(), Take(), SkipWhile(), TakeWhile(), SkipUntil(), TakeUntil(), Batch(), Repeat(), Loop(), StartWith(), Throttle(), Debounce() |
+| **TRANSFORMATIONS (Data Conversion)** | Select(), Map<T>(), Cast<T>(), SelectTo<T>(), Scan(), Reduce(), Scale(), Interpolate(), Limit(), LimitUpper(), Millis(), Micros(), Timestamp() |
+| **FILTERS (Conditional Processing)** | IsEqual(), IsNotEqual(), IsGreater(), IsLess(), IsZero(), IsNotZero(), OnRising(), OnFalling(), DebounceMillis(), LowPass(), HighPass(), MovingAverage(), Median3(), Median5(), WindowMillis(), Kalman(), Hysteresis(), PID() |
+| **AGGREGATES (Statistical Operations)** | Count(), CountDown(), Sum(), Min(), Max(), Average(), RMS(), Any(), All(), None() |
+| **OBSERVERS (Data Consumers)** | Do(), Finally(), DoAndFinally(), ToSerial(), ToProperty(), ToArray(), ToDigitalOutput(), ToAnalogOutput(), ToCircularBuffer(), DoNothing() |
+
+**Usage Pattern:** Observable → [Operators] → [Transformations] → [Filters] → [Aggregates] → Observer
+
+**Example:** `FromArray(data, size).Where(condition).Select(transform).ToSerial()`
 
 ### Creating Observables
 Observables are generally generated through factory methods provided by the Reactive class.
@@ -270,10 +222,17 @@ FromArray(data, 5)
 
 #### Distinct Value Filtering
 ```c++
-int values[] = {1, 1, 2, 2, 2, 3, 1, 3, 3};
-FromArray(values, 9)
-.Distinct()  // Outputs: 1, 2, 3, 1, 3 (removes consecutive duplicates)
-.Do([](int x) { Serial.println(x); });
+// Distinct - filters out ALL duplicates ever seen (global uniqueness)
+int values1[] = {1, 1, 2, 2, 2, 3, 1, 3, 3};
+FromArray(values1, 9)
+.Distinct()  // Outputs: 1, 2, 3 (only first occurrence of each unique value)
+.Do([](int x) { Serial.print("Distinct: "); Serial.println(x); });
+
+// DistinctUntilChanged - filters out consecutive duplicates only
+int values2[] = {1, 1, 2, 2, 2, 3, 1, 3, 3};
+FromArray(values2, 9)
+.DistinctUntilChanged()  // Outputs: 1, 2, 3, 1, 3 (removes consecutive duplicates)
+.Do([](int x) { Serial.print("DistinctUntilChanged: "); Serial.println(x); });
 ```
 
 #### Sensor Data Processing with Debouncing
