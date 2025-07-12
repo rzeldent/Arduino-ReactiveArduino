@@ -57,6 +57,7 @@ template <typename T> class OperatorWhere;
 template <typename T> class OperatorDistinct;
 template <typename T> class OperatorDistinctUntilChanged;
 template <typename Torig, typename Tdest> class OperatorSelect;
+template <typename Torig, typename Tdest> class OperatorReduce;
 template <typename T> class OperatorLast;
 template <typename T> class OperatorFirst;
 template <typename T> class OperatorTake;
@@ -201,6 +202,7 @@ public:
 	template <class Tdest> OperatorSelect<T, Tdest>& SelectTo(ReactiveMap<T, Tdest> selector);
 	template <class Tdest> TransformationMap<T, Tdest>& Map(ReactiveMap<T, Tdest> map);
 	template <class Tdest> TransformationReduce<T, Tdest>& Reduce(ReactiveReduce<T, Tdest> function, Tdest init = Tdest());
+	template <class Tdest> OperatorReduce<T, Tdest>& ReduceToFinal(ReactiveReduce<T, Tdest> function, Tdest init = Tdest());
 	TransformationUpperLimit<T>& LimitUpper(T upperLimit);
 	TransformationLowerLimit<T>& LimitLower(T lowerLimit);
 	TransformationLimit<T>& Limit(T lowerLimit, T upperLimit);
@@ -524,6 +526,15 @@ template <typename Tdest>
 auto Observable<T>::Reduce(ReactiveReduce<T, Tdest> function, Tdest init) -> TransformationReduce<T, Tdest>&
 {
 	auto newOp = new TransformationReduce<T, Tdest>(function, init);
+	Compound(*this, *newOp);
+	return *newOp;
+}
+
+template <typename T>
+template <typename Tdest>
+auto Observable<T>::ReduceToFinal(ReactiveReduce<T, Tdest> function, Tdest init) -> OperatorReduce<T, Tdest>&
+{
+	auto newOp = new OperatorReduce<T, Tdest>(function, init);
 	Compound(*this, *newOp);
 	return *newOp;
 }

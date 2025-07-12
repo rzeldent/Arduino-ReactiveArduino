@@ -13,24 +13,42 @@ using namespace Reactive;
 int values[] = { 0, 1, 4, 6, 2, 5, 7, 3, 5, 8 };
 int valuesLength = sizeof(values) / sizeof(values[0]);
 
+// Reduce function: Start with a float value of 10.0 and add 1.5 times the integer value
+float accumulateValues(float acc, int value) {
+    return acc + value * 1.5f;
+}
+
+// Action to print the final reduced value
+void printFinalResult(float x) {
+    Serial.print("Final reduced result: ");
+    Serial.println(x);
+}
+
+// Action when reduction is complete
+void printComplete() {
+    Serial.println("Reduction complete!");
+}
+
 void setup()
 {
 	Serial.begin(115200);
 	while (!Serial) delay(1);
+	
+	Serial.println("=== Reduce Operator Example ===");
+	Serial.println("Values: 0, 1, 4, 6, 2, 5, 7, 3, 5, 8");
+	Serial.println("Formula: acc + value * 1.5, starting with 10.0");
+	Serial.println();
 }
-
-// Start with a float value of 10.0 (optional) and add 1.5 times the (integer) value
 
 void loop()
 {
+	Serial.println("Running reduction...");
+	
+	// Using ReduceToFinal - only emits the final accumulated result
 	FromArray(values, valuesLength)
-    .Reduce<float>([](float acc, int value) {
-        return acc + value * 1.5f;
-    }, 10.0f)
-	.DoAndFinally(
-		[](float x) { Serial.println(x); },
-		[]() { Serial.println("No more items"); }
-	);
+    .ReduceToFinal<float>(accumulateValues, 10.0f)
+	.DoAndFinally(printFinalResult, printComplete);
 
-	delay(2000);
+	Serial.println();
+	delay(3000);
 }
