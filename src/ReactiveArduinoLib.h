@@ -245,7 +245,7 @@ namespace Reactive
 	template <typename T>
 	OperatorDistinctUntilChanged<T>& DistinctUntilChanged()
 	{
-		return *(new DistinctUntilChanged<T>());
+		return *(new OperatorDistinctUntilChanged<T>());
 	}
 
 	template <typename T>
