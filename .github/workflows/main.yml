@@ -5,7 +5,7 @@ jobs:
     name: Build Examples
     runs-on: ubuntu-latest
     env:
-      pio-env: 'esp12e'
+      pio-env: 'esp32dev'
     strategy:
       matrix:
         example: [
