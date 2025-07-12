@@ -10,43 +10,38 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #ifndef _REACTIVEOBSERVABLEANALOGINPUT_h
 #define _REACTIVEOBSERVABLEANALOGINPUT_h
 
-template <typename T>
-class ObservableAnalogInput : public Observable<T>
+class ObservableAnalogInput : public Observable<int>
 {
 public:
 	ObservableAnalogInput(uint8_t pin, uint8_t pinMode = INPUT);
-	void Subscribe(IObserver<T> &observer) override;
-	void UnSubscribe(IObserver<T> &observer) override;
+	void Subscribe(IObserver<int> &observer) override;
+	void UnSubscribe(IObserver<int> &observer) override;
 
 	void Next();
 
 private:
 	uint8_t _pin;
 
-	ObserverList<T> _childObservers;
+	ObserverList<int> _childObservers;
 };
 
-template <typename T>
-ObservableAnalogInput<T>::ObservableAnalogInput(uint8_t pin, uint8_t mode)
+ObservableAnalogInput<int>::ObservableAnalogInput(uint8_t pin, uint8_t mode)
 {
 	_pin = pin;
 	pinMode(pin, mode);
 }
 
-template <typename T>
-void ObservableAnalogInput<T>::Subscribe(IObserver<T> &observer)
+void ObservableAnalogInput<int>::Subscribe(IObserver<T> &observer)
 {
 	this->_childObservers.Add(&observer);
 }
 
-template <typename T>
-void ObservableAnalogInput<T>::UnSubscribe(IObserver<T> &observer)
+void ObservableAnalogInput<int>::UnSubscribe(IObserver<T> &observer)
 {
 	this->_childObservers.Remove(&observer);
 }
 
-template <typename T>
-void ObservableAnalogInput<T>::Next()
+void ObservableAnalogInput<int>::Next()
 {
 	this->_childObservers.OnNext(analogRead(_pin));
 }
