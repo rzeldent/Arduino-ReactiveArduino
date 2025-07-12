@@ -347,7 +347,6 @@ auto Observable<T>::SkipWhile(ReactivePredicate<T> condition) -> OperatorSkipWhi
 	return *newOp;
 }
 
-
 template <typename T>
 auto Observable<T>::Take(size_t num) -> OperatorTake<T>&
 {
