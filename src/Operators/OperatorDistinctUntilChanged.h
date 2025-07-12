@@ -14,7 +14,7 @@ template <typename T>
 class OperatorDistinctUntilChanged : public Operator<T, T>
 {
 public:
-	DistinctUntilChanged();
+	OperatorDistinctUntilChanged();
 
 	void OnNext(T value) override;
 
