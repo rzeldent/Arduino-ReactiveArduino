@@ -4,6 +4,36 @@ ReactiveArduino implements observable-observer pattern on a processor like Ardui
 
 ReactiveArduino is heavily based on [ReactiveX](http://reactivex.io/) and [ReactiveUI](https://reactiveui.net/), adapted to the needs and limitations in a MCU.
 
+## 🚀 New Extensions Available!
+
+This fork includes powerful new reactive extensions:
+- **Advanced Operators**: `Distinct()`, `Throttle()`, `Scan()`, `StartWith()`, `Debounce()`
+- **Professional Filters**: `Kalman()`, `Hysteresis()`, `PID()` controller
+- **Sensor Observables**: Accelerometer, Ultrasonic, Rotary Encoder support
+- **Enhanced Transformations**: `Interpolate()` for linear mapping
+
+See [EXTENSIONS.md](EXTENSIONS.md) for complete documentation.
+
+## Development Setup
+
+### Arduino IDE
+1. Download and install as a library
+2. Include `#include "ReactiveArduinoLib.h"`
+
+### PlatformIO (Recommended)
+```bash
+# Clone and build
+git clone https://github.com/rzeldent/Arduino-ReactiveArduino.git
+cd Arduino-ReactiveArduino
+pio run -e esp32
+
+# Test examples
+pio run -e test_pid
+pio run -e test_extensions
+```
+
+See [PLATFORMIO.md](PLATFORMIO.md) for detailed development guide.
+
 ## Instructions for use
 The general use of ReactiveArduino consists of:
 * Define an observable (Timer, Interval, FromArray, FromProperty...)

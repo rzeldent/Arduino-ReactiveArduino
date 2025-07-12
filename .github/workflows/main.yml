@@ -1,13 +1,39 @@
 name: Platform IO CI
-on: [push]
+on: [push, pull_request]
 jobs:
   build:
-    name: Build
+    name: Build Examples
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        pio-env: ['esp12e', 'esp32dev']
-        example: ['Blink/Blink.cpp', 'Do/Do.cpp', 'FromArray/FromArray.cpp', 'FromProperty/FromProperty.cpp', 'FromSerialPort/FromSerialPort.cpp', 'FromString/FromString.cpp', 'GlobalDefined/GlobalDefined.cpp', 'Reduce/Reduce.cpp']
+        pio-env: ['esp12e', 'esp32dev', 'uno', 'nanoatmega328']
+        example: [
+          'Blink/Blink.cpp', 
+          'Do/Do.cpp', 
+          'FromArray/FromArray.cpp', 
+          'FromProperty/FromProperty.cpp', 
+          'FromSerialPort/FromSerialPort.cpp', 
+          'FromString/FromString.cpp', 
+          'GlobalDefined/GlobalDefined.cpp', 
+          'Reduce/Reduce.cpp',
+          'ThrottleExample/ThrottleExample.cpp',
+          'UltrasonicExample/UltrasonicExample.cpp',
+          'AccelerometerExample/AccelerometerExample.cpp',
+          'RotaryEncoderExample/RotaryEncoderExample.cpp',
+          'PIDTemperatureControl/PIDTemperatureControl.cpp',
+          'PIDMotorSpeedControl/PIDMotorSpeedControl.cpp',
+          'DistinctExample/DistinctExample.cpp'
+        ]
+        exclude:
+          # Exclude memory-intensive examples from smaller boards
+          - pio-env: 'uno'
+            example: 'AccelerometerExample/AccelerometerExample.cpp'
+          - pio-env: 'uno'
+            example: 'PIDMotorSpeedControl/PIDMotorSpeedControl.cpp'
+          - pio-env: 'nanoatmega328'
+            example: 'AccelerometerExample/AccelerometerExample.cpp'
+          - pio-env: 'nanoatmega328'
+            example: 'PIDMotorSpeedControl/PIDMotorSpeedControl.cpp'
     steps:
       - uses: actions/checkout@v2
       - name: Set up python
@@ -19,3 +45,38 @@ jobs:
         run: python -m pip install platformio
       - name: Build firmware
         run: pio ci --lib="." --board ${{matrix.pio-env}}  "examples/${{matrix.example}}"
+
+  library-test:
+    name: Library Compilation Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pio-env: ['uno', 'esp32dev', 'esp12e']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+      - name: Install PlatformIO
+        run: python -m pip install platformio
+      - name: Test library compilation
+        run: pio ci --lib="." --board ${{matrix.pio-env}} "src/main.cpp"
+
+  syntax-check:
+    name: Syntax and Header Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+      - name: Install PlatformIO
+        run: python -m pip install platformio
+      - name: Check library syntax
+        run: |
+          pio ci --lib="." --board uno --compile-only "src/main.cpp"
+          echo "Library syntax check passed!"
