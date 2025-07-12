@@ -49,7 +49,7 @@ void setup()
     
     // Setpoint control via potentiometer
     potentiometer
-    .Interpolate(0, 1023, 0, 100)  // Map to 0-100 RPM
+    .Scale(0, 1023, 0, 100)  // Map to 0-100 RPM using existing Scale method
     .DistinctUntilChanged()  // Only update when setpoint changes
     .Do([](int targetRPM) {
         pidController.SetSetpoint((float)targetRPM);

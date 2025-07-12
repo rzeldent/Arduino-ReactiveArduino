@@ -27,10 +27,10 @@ void setup()
 	.Select([](AccelerometerData data) { return data.magnitude; })
 	.Where([](float magnitude) { return magnitude > 1.2; })  // Motion threshold
 	.DistinctUntilChanged()  // Only count distinct movements
-	.Scan<int>(0, [](int count, float magnitude) { return count + 1; })  // Accumulate steps
-	.Do([](int steps) {
+	.Do([](float magnitude) {
+		stepCount++;  // Manual step counting for now
 		Serial.print("Steps counted: ");
-		Serial.println(steps);
+		Serial.println(stepCount);
 	});
 
 	// Tilt detection
@@ -38,7 +38,7 @@ void setup()
 	.Select([](AccelerometerData data) { 
 		return atan2(data.y, data.x) * 180.0 / PI;  // Calculate tilt angle
 	})
-	.Interpolate(-90.0, 90.0, 0, 255)  // Map angle to 0-255 range
+	.Scale(-90.0, 90.0, 0, 255)  // Map angle to 0-255 range
 	.Do([](int mappedAngle) {
 		Serial.print("Tilt mapped to LED brightness: ");
 		Serial.println(mappedAngle);

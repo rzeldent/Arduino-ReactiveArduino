@@ -25,6 +25,11 @@ template <typename T> class ObservableTimerMicros;
 template <typename T> class ObservableIntervalMillis;
 template <typename T> class ObservableIntervalMicros;
 
+// New extended observables forward declarations
+template <typename T> class ObservableAccelerometer;
+template <typename T> class ObservableUltrasonic;
+template <typename T> class ObservableRotaryEncoder;
+
 template <typename T> class FilterOnRising;
 template <typename T> class FilterOnFalling;
 template <typename T> class FilterMovingAverage;
@@ -95,6 +100,18 @@ template <typename T> class TransformationJoin;
 template <typename T> class TransformationToBool;
 template <typename T> class TransformationParseFloat;
 template <typename T> class TransformationParseInt;
+template <typename T> class TransformationInterpolate;
+
+// New extended filters forward declarations
+template <typename T> class FilterHysteresis;
+template <typename T> class FilterKalman;
+template <typename T> class FilterPID;
+
+// New extended operators forward declarations
+template <typename T> class OperatorThrottle;
+template <typename T, typename TAcc> class OperatorScan;
+template <typename T> class OperatorStartWith;
+template <typename T> class OperatorDebounce;
 
 template <typename T> class AggregateCount;
 template <typename T> class AggregateCountdown;
@@ -155,7 +172,7 @@ public:
 	// "Fluent" behavior
 	OperatorWhere<T>& Where(ReactivePredicate<T> condition);
 	OperatorDistinct<T>& Distinct();
-	OperatorDistinctUntilChaged<T>& DistinctUntilChanged();
+	OperatorDistinctUntilChanged<T>& DistinctUntilChanged();
 	OperatorFirst<T>& First();
 	OperatorLast<T>& Last();
 	OperatorSkip<T>& Skip(size_t num);
@@ -227,6 +244,20 @@ public:
 	FilterIsEqual<T>& IsEqual(T value);
 	FilterIsNotZero<T>& IsNotZero();
 	FilterIsZero<T>& IsZero();
+
+	// New extended filters
+	FilterHysteresis<T>& Hysteresis(T lowThreshold, T highThreshold);
+	FilterKalman<T>& Kalman(T processVariance, T measurementVariance, T estimatedError = 1.0);
+	FilterPID<T>& PID(T setpoint, T kp, T ki, T kd, T outputMin = -255, T outputMax = 255);
+
+	// New extended operators
+	OperatorThrottle<T>& Throttle(unsigned long intervalMillis);
+	template <typename TAcc> OperatorScan<T, TAcc>& Scan(TAcc seed, TAcc(*accumulator)(TAcc, T));
+	OperatorStartWith<T>& StartWith(T startValue);
+	OperatorDebounce<T>& Debounce(unsigned long debounceMillis);
+
+	// New extended transformations
+	TransformationInterpolate<T>& Interpolate(T inputMin, T inputMax, T outputMin, T outputMax, bool constrain = true);
 
 	AggregateCount<T>& Count();
 	AggregateCountdown<T>& CountDown(size_t N);
@@ -998,6 +1029,74 @@ auto Observable<T>::ToAnalogOutput(uint8_t pin) -> ObserverAnalogOutput<T>&
 {
 	auto newOp = new ObserverAnalogOutput<T>(pin);
 	Subscribe(*newOp);
+	return *newOp;
+}
+
+// New extended filters implementations
+template <typename T>
+auto Observable<T>::Hysteresis(T lowThreshold, T highThreshold) -> FilterHysteresis<T>&
+{
+	auto newOp = new FilterHysteresis<T>(lowThreshold, highThreshold);
+	Compound(*this, *newOp);
+	return *newOp;
+}
+
+template <typename T>
+auto Observable<T>::Kalman(T processVariance, T measurementVariance, T estimatedError) -> FilterKalman<T>&
+{
+	auto newOp = new FilterKalman<T>(processVariance, measurementVariance, estimatedError);
+	Compound(*this, *newOp);
+	return *newOp;
+}
+
+template <typename T>
+auto Observable<T>::PID(T setpoint, T kp, T ki, T kd, T outputMin, T outputMax) -> FilterPID<T>&
+{
+	auto newOp = new FilterPID<T>(setpoint, kp, ki, kd, outputMin, outputMax);
+	Compound(*this, *newOp);
+	return *newOp;
+}
+
+// New extended operators implementations
+template <typename T>
+auto Observable<T>::Throttle(unsigned long intervalMillis) -> OperatorThrottle<T>&
+{
+	auto newOp = new OperatorThrottle<T>(intervalMillis);
+	Compound(*this, *newOp);
+	return *newOp;
+}
+
+template <typename T>
+template <typename TAcc>
+auto Observable<T>::Scan(TAcc seed, TAcc(*accumulator)(TAcc, T)) -> OperatorScan<T, TAcc>&
+{
+	auto newOp = new OperatorScan<T, TAcc>(seed, accumulator);
+	Compound(*this, *newOp);
+	return *newOp;
+}
+
+template <typename T>
+auto Observable<T>::StartWith(T startValue) -> OperatorStartWith<T>&
+{
+	auto newOp = new OperatorStartWith<T>(startValue);
+	Compound(*this, *newOp);
+	return *newOp;
+}
+
+template <typename T>
+auto Observable<T>::Debounce(unsigned long debounceMillis) -> OperatorDebounce<T>&
+{
+	auto newOp = new OperatorDebounce<T>(debounceMillis);
+	Compound(*this, *newOp);
+	return *newOp;
+}
+
+// New extended transformations implementations
+template <typename T>
+auto Observable<T>::Interpolate(T inputMin, T inputMax, T outputMin, T outputMax, bool constrain) -> TransformationInterpolate<T>&
+{
+	auto newOp = new TransformationInterpolate<T>(inputMin, inputMax, outputMin, outputMax, constrain);
+	Compound(*this, *newOp);
 	return *newOp;
 }
 // #pragma endregion

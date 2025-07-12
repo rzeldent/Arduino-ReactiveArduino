@@ -143,6 +143,25 @@ namespace Reactive
 	{
 		return *(new ObservableSerial<double>());
 	}
+
+	// New extended observables
+	template <typename T>
+	auto AccelerometerInput(int pinX, int pinY, int pinZ, unsigned long intervalMillis = 100) -> ObservableAccelerometer<T>&
+	{
+		return *(new ObservableAccelerometer<T>(pinX, pinY, pinZ, intervalMillis));
+	}
+
+	template <typename T>
+	auto UltrasonicSensor(int triggerPin, int echoPin, unsigned long intervalMillis = 100) -> ObservableUltrasonic<T>&
+	{
+		return *(new ObservableUltrasonic<T>(triggerPin, echoPin, intervalMillis));
+	}
+
+	template <typename T>
+	auto RotaryEncoder(int pinA, int pinB, int buttonPin = -1) -> ObservableRotaryEncoder<T>&
+	{
+		return *(new ObservableRotaryEncoder<T>(pinA, pinB, buttonPin));
+	}
 // #pragma endregion
 
 
@@ -653,6 +672,57 @@ namespace Reactive
 	FilterIsZero<T>& IsZero()
 	{
 		return *(new FilterIsZero<T>());
+	}
+
+	// New extended filters
+	template <typename T>
+	FilterHysteresis<T>& Hysteresis(T lowThreshold, T highThreshold)
+	{
+		return *(new FilterHysteresis<T>(lowThreshold, highThreshold));
+	}
+
+	template <typename T>
+	FilterKalman<T>& Kalman(T processVariance, T measurementVariance, T estimatedError = 1.0)
+	{
+		return *(new FilterKalman<T>(processVariance, measurementVariance, estimatedError));
+	}
+
+	template <typename T>
+	FilterPID<T>& PID(T setpoint, T kp, T ki, T kd, T outputMin = -255, T outputMax = 255)
+	{
+		return *(new FilterPID<T>(setpoint, kp, ki, kd, outputMin, outputMax));
+	}
+
+	// New extended operators
+	template <typename T>
+	OperatorThrottle<T>& Throttle(unsigned long intervalMillis)
+	{
+		return *(new OperatorThrottle<T>(intervalMillis));
+	}
+
+	template <typename T, typename TAcc>
+	OperatorScan<T, TAcc>& Scan(TAcc seed, TAcc(*accumulator)(TAcc, T))
+	{
+		return *(new OperatorScan<T, TAcc>(seed, accumulator));
+	}
+
+	template <typename T>
+	OperatorStartWith<T>& StartWith(T startValue)
+	{
+		return *(new OperatorStartWith<T>(startValue));
+	}
+
+	template <typename T>
+	OperatorDebounce<T>& Debounce(unsigned long debounceMillis)
+	{
+		return *(new OperatorDebounce<T>(debounceMillis));
+	}
+
+	// New extended transformations
+	template <typename T>
+	TransformationInterpolate<T>& Interpolate(T inputMin, T inputMax, T outputMin, T outputMax, bool constrain = true)
+	{
+		return *(new TransformationInterpolate<T>(inputMin, inputMax, outputMin, outputMax, constrain));
 	}
 // #pragma endregion
 
