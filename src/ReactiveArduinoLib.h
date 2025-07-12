@@ -67,9 +67,9 @@ namespace Reactive
 		return *(new ObservableProperty<T>());
 	}
 
-	inline auto FromAnalogInput(uint8_t pin, uint8_t pinMode = INPUT) -> ObservableAnalogInput<int>&
+	inline auto FromAnalogInput(uint8_t pin, unsigned long intervalMillis = 100) -> ObservableAnalogInput<int>&
 	{
-		return *(new ObservableAnalogInput<int>(pin, pinMode));
+		return *(new ObservableAnalogInput<int>(pin, intervalMillis));
 	}
 
 	inline auto FromDigitalInput(uint8_t pin, uint8_t pinMode = INPUT) -> ObservableDigitalInput<int>&
@@ -393,6 +393,12 @@ namespace Reactive
 	TransformationMap<Torig, Tdest>& Select(ReactiveMap<Torig, Tdest> map)
 	{
 		return *(new TransformationMap<Torig, Tdest>(map));
+	}
+
+	template <typename Torig, typename Tdest>
+	OperatorSelect<Torig, Tdest>& SelectTo(ReactiveMap<Torig, Tdest> selector)
+	{
+		return *(new OperatorSelect<Torig, Tdest>(selector));
 	}
 
 	template <typename Torig, typename Tdest>

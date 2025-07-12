@@ -15,6 +15,15 @@ struct RotaryEncoderData
 	int position;
 	int direction; // -1, 0, or 1
 	bool buttonPressed;
+	
+	// Comparison operators for use with debounce and other operators
+	bool operator==(const RotaryEncoderData& other) const {
+		return position == other.position && direction == other.direction && buttonPressed == other.buttonPressed;
+	}
+	
+	bool operator!=(const RotaryEncoderData& other) const {
+		return !(*this == other);
+	}
 };
 
 template <typename T>

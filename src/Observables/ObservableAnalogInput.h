@@ -10,40 +10,76 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #ifndef _REACTIVEOBSERVABLEANALOGINPUT_h
 #define _REACTIVEOBSERVABLEANALOGINPUT_h
 
-class ObservableAnalogInput : public Observable<int>
+template <typename T = int>
+class ObservableAnalogInput : public Observable<T>
 {
 public:
-	ObservableAnalogInput(uint8_t pin, uint8_t pinMode = INPUT);
-	void Subscribe(IObserver<int> &observer) override;
-	void UnSubscribe(IObserver<int> &observer) override;
+	ObservableAnalogInput(uint8_t pin, unsigned long intervalMillis = 100);
+	void Subscribe(IObserver<T> &observer) override;
+	void UnSubscribe(IObserver<T> &observer) override;
 
 	void Next();
+	void Update();
+	void Reset() override;
+	
+	void SetInterval(unsigned long intervalMillis);
 
 private:
 	uint8_t _pin;
+	unsigned long _intervalMillis;
+	unsigned long _lastUpdate;
 
-	ObserverList<int> _childObservers;
+	ObserverList<T> _childObservers;
 };
 
-ObservableAnalogInput<int>::ObservableAnalogInput(uint8_t pin, uint8_t mode)
+template <typename T>
+ObservableAnalogInput<T>::ObservableAnalogInput(uint8_t pin,  unsigned long intervalMillis)
 {
 	_pin = pin;
-	pinMode(pin, mode);
+	_intervalMillis = intervalMillis;
+	_lastUpdate = 0;
+	pinMode(pin, INPUT);
 }
 
-void ObservableAnalogInput<int>::Subscribe(IObserver<T> &observer)
+template <typename T>
+void ObservableAnalogInput<T>::Subscribe(IObserver<T> &observer)
 {
 	this->_childObservers.Add(&observer);
 }
 
-void ObservableAnalogInput<int>::UnSubscribe(IObserver<T> &observer)
+template <typename T>
+void ObservableAnalogInput<T>::UnSubscribe(IObserver<T> &observer)
 {
 	this->_childObservers.Remove(&observer);
 }
 
-void ObservableAnalogInput<int>::Next()
+template <typename T>
+void ObservableAnalogInput<T>::Next()
 {
 	this->_childObservers.OnNext(analogRead(_pin));
+}
+
+template <typename T>
+void ObservableAnalogInput<T>::Update()
+{
+	unsigned long currentTime = millis();
+	if (currentTime - _lastUpdate >= _intervalMillis)
+	{
+		this->_childObservers.OnNext(analogRead(_pin));
+		_lastUpdate = currentTime;
+	}
+}
+
+template <typename T>
+void ObservableAnalogInput<T>::Reset()
+{
+	_lastUpdate = 0;
+}
+
+template <typename T>
+void ObservableAnalogInput<T>::SetInterval(unsigned long intervalMillis)
+{
+	_intervalMillis = intervalMillis;
 }
 
 #endif

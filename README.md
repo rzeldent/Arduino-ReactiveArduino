@@ -53,7 +53,65 @@ More examples in Wiki/[Examples](https://github.com/luisllamasbinaburo/Arduino-R
 ### Observable, observers and operators legend
 More info about the Observables, Observers, and Operators available in the [Wiki](https://github.com/luisllamasbinaburo/Arduino-ReactiveArduino/wiki)
 
-![alt text](https://github.com/luisllamasbinaburo/Arduino-ReactiveArduino/blob/master/ReactiveArduino%20Legend.png "Legend")
+```
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                        🔄 REACTIVE ARDUINO COMPONENT LEGEND 🔄                      │
+├─────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                     │
+│  📡 OBSERVABLES (Data Sources)                                                     │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
+│  │ • FromArray()        • FromProperty()     • FromSerial()                    │   │
+│  │ • FromRange()        • AnalogInput()      • DigitalInput()                  │   │
+│  │ • TimerMillis()      • TimerMicros()      • IntervalMillis()                │   │
+│  │ • Property<T>()      • ManualDefer()      • IntervalMicros()                │   │
+│  └─────────────────────────────────────────────────────────────────────────────┘   │
+│                                 ⬇️                                                  │
+│  🔧 OPERATORS (Data Processing)                                                    │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
+│  │ • Where()            • Distinct()         • DistinctUntilChanged()          │   │
+│  │ • First()            • Last()             • Skip() / Take()                 │   │
+│  │ • SkipWhile()        • TakeWhile()        • SkipUntil() / TakeUntil()       │   │
+│  │ • Batch()            • Repeat()           • Loop()                          │   │
+│  └─────────────────────────────────────────────────────────────────────────────┘   │
+│                                 ⬇️                                                  │
+│  🔄 TRANSFORMATIONS (Data Conversion)                                              │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
+│  │ • Select()           • Map<T>()           • Cast<T>()                       │   │
+│  │ • SelectTo<T>()      • Reduce()           • Scale()                         │   │
+│  │ • Limit()            • LimitUpper()       • LimitLower()                    │   │
+│  │ • Millis()           • Micros()           • Timestamp()                     │   │
+│  └─────────────────────────────────────────────────────────────────────────────┘   │
+│                                 ⬇️                                                  │
+│  🌡️ FILTERS (Conditional Processing)                                               │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
+│  │ • IsEqual()          • IsNotEqual()       • IsGreater() / IsLess()          │   │
+│  │ • IsZero()           • IsNotZero()        • OnRising() / OnFalling()        │   │
+│  │ • DebounceMillis()   • LowPass()          • HighPass()                      │   │
+│  │ • MovingAverage()    • Median3/5()        • WindowMillis()                  │   │
+│  └─────────────────────────────────────────────────────────────────────────────┘   │
+│                                 ⬇️                                                  │
+│  📊 AGGREGATES (Statistical Operations)                                            │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
+│  │ • Count()            • CountDown()        • Sum()                           │   │
+│  │ • Min() / Max()      • Average()          • RMS()                           │   │
+│  │ • Any()              • All()              • None()                          │   │
+│  └─────────────────────────────────────────────────────────────────────────────┘   │
+│                                 ⬇️                                                  │
+│  🎯 OBSERVERS (Data Consumers)                                                     │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
+│  │ • Do()               • Finally()          • DoAndFinally()                  │   │
+│  │ • ToSerial()         • ToProperty()       • ToArray()                       │   │
+│  │ • ToDigitalOutput()  • ToAnalogOutput()   • ToCircularBuffer()              │   │
+│  │ • DoNothing()        • (Custom Actions)                                     │   │
+│  └─────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                     │
+│  💡 USAGE PATTERN: Observable → [Operators] → [Transformations] → [Filters] →     │
+│                    [Aggregates] → Observer                                         │
+│                                                                                     │
+│  Example: FromArray(data, size).Where(condition).Select(transform).ToSerial()      │
+│                                                                                     │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Creating Observables
 Observables are generally generated through factory methods provided by the Reactive class.

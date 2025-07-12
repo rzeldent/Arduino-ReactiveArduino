@@ -10,6 +10,21 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #include "ReactiveArduinoLib.h"
 using namespace Reactive;
 
+// Helper functions for actions
+void printValue(int value) {
+    Serial.print(value);
+    Serial.print(" ");
+}
+
+void printNewline() {
+    Serial.println();
+}
+
+void printUniqueValue(int uniqueValue) {
+    Serial.print("New unique sensor value: ");
+    Serial.println(uniqueValue);
+}
+
 // Example demonstrating the difference between Distinct and DistinctUntilChanged
 int values[] = { 1, 2, 3, 2, 4, 1, 5, 3, 6, 2, 1 };
 int valuesLength = sizeof(values) / sizeof(values[0]);
@@ -23,35 +38,17 @@ void setup()
     
     Serial.println("\nOriginal sequence:");
     FromArray(values, valuesLength)
-    .Do([](int value) {
-        Serial.print(value);
-        Serial.print(" ");
-    })
-    .Finally([]() {
-        Serial.println();
-    });
+    .DoAndFinally(printValue, printNewline);
     
     Serial.println("\nWith Distinct() - removes ALL duplicates:");
     FromArray(values, valuesLength)
     .Distinct()  // New operator: removes all duplicate values
-    .Do([](int value) {
-        Serial.print(value);
-        Serial.print(" ");
-    })
-    .Finally([]() {
-        Serial.println();
-    });
+    .DoAndFinally(printValue, printNewline);
     
     Serial.println("\nWith DistinctUntilChanged() - removes consecutive duplicates only:");
     FromArray(values, valuesLength)
     .DistinctUntilChanged()  // Existing operator: removes only consecutive duplicates
-    .Do([](int value) {
-        Serial.print(value);
-        Serial.print(" ");
-    })
-    .Finally([]() {
-        Serial.println();
-    });
+    .DoAndFinally(printValue, printNewline);
     
     Serial.println("\n=== Sensor Reading Example ===");
     Serial.println("Simulating sensor with noise and repeated readings...");
@@ -71,15 +68,11 @@ void loop()
             int currentReading = sensorReadings[readingIndex];
             
             // Process with Distinct to get unique values only
-            auto obs = Property<int>();
-            obs.SetValue(currentReading);
+            auto obs = FromArray(&currentReading, 1);
             
             obs
             .Distinct()
-            .Do([](int uniqueValue) {
-                Serial.print("New unique sensor value: ");
-                Serial.println(uniqueValue);
-            });
+            .Do(printUniqueValue);
             
             readingIndex++;
             lastReading = millis();

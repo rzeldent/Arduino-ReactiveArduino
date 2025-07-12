@@ -13,7 +13,7 @@ using namespace Reactive;
 // PID Temperature Controller Example
 // Hardware: Temperature sensor on A0, heater control on pin 9
 
-auto tempSensor = ObservableAnalogInput(A0, 200);  // Read temperature every 200ms
+auto tempSensor = ObservableAnalogInput<int>(A3, 200);  // Read temperature every 200ms
 auto pidController = FilterPID<float>(25.0, 2.0, 0.1, 0.5, 0, 255);  // Setpoint 25°C, Kp=2.0, Ki=0.1, Kd=0.5
 
 const int HEATER_PIN = 9;
@@ -27,6 +27,31 @@ float adcToTemperature(int adcValue) {
     // Simplified temperature calculation (replace with your sensor's formula)
     float temperature = 25.0 - (resistance - 10000.0) / 100.0;
     return temperature;
+}
+
+// PID output action
+void applyPIDOutput(float pidOutput) {
+    // Apply PID output to heater
+    analogWrite(HEATER_PIN, (int)pidOutput);
+    
+    // Status LED: on when heating
+    digitalWrite(STATUS_LED, pidOutput > 10);
+    
+    // Debug output
+    Serial.print("PID Output: ");
+    Serial.print(pidOutput);
+    Serial.print(" (");
+    Serial.print((pidOutput / 255.0) * 100.0);
+    Serial.println("% heating)");
+}
+
+// Temperature display action
+void displayTemperature(float temperature) {
+    Serial.print("Temperature: ");
+    Serial.print(temperature);
+    Serial.print("°C, Error: ");
+    Serial.print(pidController.GetError());
+    Serial.println("°C");
 }
 
 void setup()
@@ -44,36 +69,17 @@ void setup()
     
     // Temperature control system
     tempSensor
-    .Select([](int adcValue) { return adcToTemperature(adcValue); })
+    .Map<float>(adcToTemperature)
     .Kalman(0.1, 1.0)  // Smooth temperature readings
     .PID(25.0, 2.0, 0.1, 0.5, 0, 255)  // PID control
-    .Do([](float pidOutput) {
-        // Apply PID output to heater
-        analogWrite(HEATER_PIN, (int)pidOutput);
-        
-        // Status LED: on when heating
-        digitalWrite(STATUS_LED, pidOutput > 10);
-        
-        // Debug output
-        Serial.print("PID Output: ");
-        Serial.print(pidOutput);
-        Serial.print(" (");
-        Serial.print((pidOutput / 255.0) * 100.0);
-        Serial.println("% heating)");
-    });
+    .Do(applyPIDOutput);
     
     // Separate monitoring chain for temperature display
     tempSensor
-    .Select([](int adcValue) { return adcToTemperature(adcValue); })
+    .Map<float>(adcToTemperature)
     .Kalman(0.1, 1.0)
     .Throttle(1000)  // Display every second
-    .Do([](float temperature) {
-        Serial.print("Temperature: ");
-        Serial.print(temperature);
-        Serial.print("°C, Error: ");
-        Serial.print(pidController.GetError());
-        Serial.println("°C");
-    });
+    .Do(displayTemperature);
 }
 
 void loop()

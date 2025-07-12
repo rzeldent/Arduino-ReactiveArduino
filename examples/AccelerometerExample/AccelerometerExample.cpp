@@ -10,9 +10,35 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #include "ReactiveArduinoLib.h"
 using namespace Reactive;
 
+// Helper functions for type conversion
+float getMagnitude(AccelerometerData data) {
+	return data.magnitude;
+}
+
+float getTiltAngle(AccelerometerData data) {
+	return atan2(data.y, data.x) * 180.0 / PI;
+}
+
+bool magnitudeThreshold(float magnitude) {
+	return magnitude > 1.2;
+}
+
+void printStepCount(float magnitude) {
+	static int stepCount = 0;
+	stepCount++;
+	Serial.print("Steps counted: ");
+	Serial.println(stepCount);
+}
+
+void printTiltBrightness(float mappedAngle) {
+	int intAngle = (int)mappedAngle;
+	Serial.print("Tilt mapped to LED brightness: ");
+	Serial.println(intAngle);
+	analogWrite(9, intAngle);
+}
+
 // Example demonstrating accelerometer observable and scan operator
-auto accelerometer = ObservableAccelerometer<AccelerometerData>(A0, A1, A2, 100); // X, Y, Z pins, 100ms interval
-int stepCount = 0;
+auto accelerometer = Reactive::ObservableAccelerometer<AccelerometerData>(A3, A4, A5, 100); // X, Y, Z pins, 100ms interval
 
 void setup()
 {
@@ -24,26 +50,16 @@ void setup()
 
 	// Step counter using scan operator
 	accelerometer
-	.Select([](AccelerometerData data) { return data.magnitude; })
-	.Where([](float magnitude) { return magnitude > 1.2; })  // Motion threshold
+	.Select(getMagnitude)
+	.Where(magnitudeThreshold)
 	.DistinctUntilChanged()  // Only count distinct movements
-	.Do([](float magnitude) {
-		stepCount++;  // Manual step counting for now
-		Serial.print("Steps counted: ");
-		Serial.println(stepCount);
-	});
+	.Do(printStepCount);
 
 	// Tilt detection
 	accelerometer
-	.Select([](AccelerometerData data) { 
-		return atan2(data.y, data.x) * 180.0 / PI;  // Calculate tilt angle
-	})
+	.Select(getTiltAngle)
 	.Scale(-90.0, 90.0, 0, 255)  // Map angle to 0-255 range
-	.Do([](int mappedAngle) {
-		Serial.print("Tilt mapped to LED brightness: ");
-		Serial.println(mappedAngle);
-		analogWrite(9, mappedAngle);  // Control LED brightness with tilt
-	});
+	.Do(printTiltBrightness);
 }
 
 void loop()

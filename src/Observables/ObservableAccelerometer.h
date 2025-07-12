@@ -16,6 +16,18 @@ struct AccelerometerData
 	float y;
 	float z;
 	float magnitude;
+	
+	// Comparison operators for use with debounce and other operators
+	bool operator==(const AccelerometerData& other) const {
+		return x == other.x && 
+		       y == other.y && 
+		       z == other.z && 
+		       magnitude == other.magnitude;
+	}
+	
+	bool operator!=(const AccelerometerData& other) const {
+		return !(*this == other);
+	}
 };
 
 template <typename T>
@@ -55,6 +67,11 @@ ObservableAccelerometer<T>::ObservableAccelerometer(int pinX, int pinY, int pinZ
 	_lastUpdate = 0;
 	_sensitivity = 1.0; // Default sensitivity
 	_offsetX = _offsetY = _offsetZ = 0.0;
+	
+	// Set pins to INPUT mode for proper analog reading
+	pinMode(_pinX, INPUT);
+	pinMode(_pinY, INPUT);
+	pinMode(_pinZ, INPUT);
 }
 
 template <typename T>

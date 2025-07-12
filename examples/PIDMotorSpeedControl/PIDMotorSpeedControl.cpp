@@ -14,7 +14,7 @@ using namespace Reactive;
 // Hardware: Encoder on pins 2&3, motor driver on pin 9, potentiometer on A0
 
 auto encoder = ObservableRotaryEncoder<RotaryEncoderData>(2, 3);
-auto potentiometer = ObservableAnalogInput(A0, 100);  // Read setpoint every 100ms
+auto potentiometer = ObservableAnalogInput<int>(A0, 100);  // Read setpoint every 100ms
 auto speedTimer = IntervalMillis(250);  // Calculate speed every 250ms
 
 auto pidController = FilterPID<float>(0, 1.5, 0.2, 0.1, -255, 255);

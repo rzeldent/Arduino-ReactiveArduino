@@ -20,8 +20,8 @@ void setup()
 	// Menu navigation system
 	encoder
 	.Where([](RotaryEncoderData data) { return data.direction != 0; })
-	.Select([](RotaryEncoderData data) { return data.position; })
-	.Interpolate(-10, 10, 0, 100)  // Map encoder range to menu range
+	.Map<int>([](RotaryEncoderData data) { return data.position; })
+	.Scale(-10, 10, 0, 100)  // Map encoder range to menu range
 	.Do([](int menuPosition) {
 		Serial.print("Menu position: ");
 		Serial.println(menuPosition);
@@ -37,7 +37,7 @@ void setup()
 
 	// Speed-based actions
 	encoder
-	.Select([](RotaryEncoderData data) { return abs(data.direction); })
+	.Map<int>([](RotaryEncoderData data) { return abs(data.direction); })
 	.StartWith(0)  // Start with zero speed
 	.Scan<int>(0, [](int speed, int direction) { 
 		return direction > 0 ? min(speed + 1, 10) : max(speed - 1, 0); 

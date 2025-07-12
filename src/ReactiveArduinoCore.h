@@ -56,6 +56,7 @@ template <typename T> class FilterIsZero;
 template <typename T> class OperatorWhere;
 template <typename T> class OperatorDistinct;
 template <typename T> class OperatorDistinctUntilChanged;
+template <typename Torig, typename Tdest> class OperatorSelect;
 template <typename T> class OperatorLast;
 template <typename T> class OperatorFirst;
 template <typename T> class OperatorTake;
@@ -197,6 +198,7 @@ public:
 	TransformationSelect<T>& Select(ReactiveFunction<T> function);
 	template <class Tdest> TransformationCast<T, Tdest>& Cast();
 	template <class Tdest> TransformationMap<T, Tdest>& Select(ReactiveMap<T, Tdest> map);
+	template <class Tdest> OperatorSelect<T, Tdest>& SelectTo(ReactiveMap<T, Tdest> selector);
 	template <class Tdest> TransformationMap<T, Tdest>& Map(ReactiveMap<T, Tdest> map);
 	template <class Tdest> TransformationReduce<T, Tdest>& Reduce(ReactiveReduce<T, Tdest> function, Tdest init = Tdest());
 	TransformationUpperLimit<T>& LimitUpper(T upperLimit);
@@ -508,6 +510,14 @@ auto Observable<T>::Select(ReactiveMap<T, Tdest> map) -> TransformationMap<T, Td
 	return *newOp;
 }
 
+template <typename T>
+template <typename Tdest>
+auto Observable<T>::SelectTo(ReactiveMap<T, Tdest> selector) -> OperatorSelect<T, Tdest>&
+{
+	auto newOp = new OperatorSelect<T, Tdest>(selector);
+	Compound(*this, *newOp);
+	return *newOp;
+}
 
 template <typename T>
 template <typename Tdest>
