@@ -300,7 +300,7 @@ auto Observable<T>::Distinct() -> OperatorDistinct<T>&
 }
 
 template <typename T>
-auto Observable<T>::DistinctUntilChanged() -> DistinctUntilChanged<T>&
+auto Observable<T>::DistinctUntilChanged() -> OperatorDistinctUntilChanged<T>&
 {
 	auto newOp = new DistinctUntilChanged<T>();
 	Compound(*this, *newOp);
