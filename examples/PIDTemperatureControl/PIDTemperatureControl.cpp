@@ -13,7 +13,7 @@ using namespace Reactive;
 // PID Temperature Controller Example
 // Hardware: Temperature sensor on A0, heater control on pin 9
 
-auto tempSensor = AnalogInput(A0, 200);  // Read temperature every 200ms
+auto tempSensor = ObservableAnalogInput(A0, 200);  // Read temperature every 200ms
 auto pidController = FilterPID<float>(25.0, 2.0, 0.1, 0.5, 0, 255);  // Setpoint 25°C, Kp=2.0, Ki=0.1, Kd=0.5
 
 const int HEATER_PIN = 9;
