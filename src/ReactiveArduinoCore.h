@@ -172,7 +172,7 @@ public:
 	// "Fluent" behavior
 	OperatorWhere<T>& Where(ReactivePredicate<T> condition);
 	OperatorDistinct<T>& Distinct();
-	DistinctUntilChanged<T>& DistinctUntilChanged();
+	OperatorDistinctUntilChanged<T>& DistinctUntilChanged();
 	OperatorFirst<T>& First();
 	OperatorLast<T>& Last();
 	OperatorSkip<T>& Skip(size_t num);
