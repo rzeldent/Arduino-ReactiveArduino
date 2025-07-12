@@ -11,7 +11,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #define _REACTIVEOPERATORDISTINCT_h
 
 template <typename T>
-class DistinctUntilChanged : public Operator<T, T>
+class OperatorDistinctUntilChanged : public Operator<T, T>
 {
 public:
 	DistinctUntilChanged();
@@ -24,12 +24,12 @@ private:
 };
 
 template <typename T>
-DistinctUntilChanged<T>::DistinctUntilChanged()
+OperatorDistinctUntilChanged<T>::OperatorDistinctUntilChanged()
 {
 }
 
 template <typename T>
-void DistinctUntilChanged<T>::OnNext(T value)
+void OperatorDistinctUntilChanged<T>::OnNext(T value)
 {
 	if (!_any || (_any && _last != value))
 		this->_childObservers.OnNext(value);
