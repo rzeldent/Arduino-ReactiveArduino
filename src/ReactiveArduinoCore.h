@@ -56,8 +56,6 @@ template <typename T> class FilterIsZero;
 template <typename T> class OperatorWhere;
 template <typename T> class OperatorDistinct;
 template <typename T> class OperatorDistinctUntilChanged;
-template <typename Torig, typename Tdest> class OperatorSelect;
-template <typename Torig, typename Tdest> class OperatorReduce;
 template <typename T> class OperatorLast;
 template <typename T> class OperatorFirst;
 template <typename T> class OperatorTake;
@@ -197,14 +195,12 @@ public:
 	OperatorRepeat<T>& Repeat(size_t N);
 
 	TransformationSelect<T>& Select(ReactiveFunction<T> function);
-	template <class Tdest> TransformationCast<T, Tdest>& Cast();
-	template <class Tdest> TransformationMap<T, Tdest>& Select(ReactiveMap<T, Tdest> map);
-	template <class Tdest> OperatorSelect<T, Tdest>& SelectTo(ReactiveMap<T, Tdest> selector);
-	template <class Tdest> TransformationMap<T, Tdest>& Map(ReactiveMap<T, Tdest> map);
-	template <class Tdest> TransformationReduce<T, Tdest>& Reduce(ReactiveReduce<T, Tdest> function, Tdest init = Tdest());
-	template <class Tdest> OperatorReduce<T, Tdest>& ReduceToFinal(ReactiveReduce<T, Tdest> function, Tdest init = Tdest());
-	TransformationUpperLimit<T>& LimitUpper(T upperLimit);
+	template <typename Tdest> TransformationCast<T, Tdest>& Cast();
+	template <typename Tdest> TransformationMap<T, Tdest>& Map(ReactiveMap<T, Tdest> map);
+	template <typename Tdest> TransformationMap<T, Tdest>& Select(ReactiveMap<T, Tdest> map);
+	template <typename Tdest> TransformationReduce<T, Tdest>& Reduce(ReactiveReduce<T, Tdest> function, Tdest init);
 	TransformationLowerLimit<T>& LimitLower(T lowerLimit);
+	TransformationUpperLimit<T>& LimitUpper(T upperLimit);
 	TransformationLimit<T>& Limit(T lowerLimit, T upperLimit);
 	TransformationScale<T>& Scale(T factor);
 	TransformationScale<T>& Scale(T input_min, T input_max, T output_min, T output_max);
@@ -514,31 +510,12 @@ auto Observable<T>::Select(ReactiveMap<T, Tdest> map) -> TransformationMap<T, Td
 
 template <typename T>
 template <typename Tdest>
-auto Observable<T>::SelectTo(ReactiveMap<T, Tdest> selector) -> OperatorSelect<T, Tdest>&
-{
-	auto newOp = new OperatorSelect<T, Tdest>(selector);
-	Compound(*this, *newOp);
-	return *newOp;
-}
-
-template <typename T>
-template <typename Tdest>
 auto Observable<T>::Reduce(ReactiveReduce<T, Tdest> function, Tdest init) -> TransformationReduce<T, Tdest>&
 {
 	auto newOp = new TransformationReduce<T, Tdest>(function, init);
 	Compound(*this, *newOp);
 	return *newOp;
 }
-
-template <typename T>
-template <typename Tdest>
-auto Observable<T>::ReduceToFinal(ReactiveReduce<T, Tdest> function, Tdest init) -> OperatorReduce<T, Tdest>&
-{
-	auto newOp = new OperatorReduce<T, Tdest>(function, init);
-	Compound(*this, *newOp);
-	return *newOp;
-}
-
 
 template <typename T>
 auto Observable<T>::LimitUpper(T upperLimit) -> TransformationUpperLimit<T>&

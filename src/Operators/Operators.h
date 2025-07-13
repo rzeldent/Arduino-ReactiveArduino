@@ -46,7 +46,5 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #include "OperatorScan.h"
 #include "OperatorStartWith.h"
 #include "OperatorDebounce.h"
-#include "OperatorSelect.h"
-#include "OperatorReduce.h"
 
 #endif

@@ -46,7 +46,7 @@ void loop()
 	
 	// Using ReduceToFinal - only emits the final accumulated result
 	FromArray(values, valuesLength)
-    .ReduceToFinal<float>(accumulateValues, 10.0f)
+    .Reduce(accumulateValues, 10.0f)
 	.DoAndFinally(printFinalResult, printComplete);
 
 	Serial.println();

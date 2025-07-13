@@ -50,7 +50,7 @@ void setup()
 
 	// Step counter using scan operator
 	accelerometer
-	.Select(getMagnitude)
+	.Select<float>(getMagnitude)
 	.Where(magnitudeThreshold)
 	.DistinctUntilChanged()  // Only count distinct movements
 	.Do(printStepCount);

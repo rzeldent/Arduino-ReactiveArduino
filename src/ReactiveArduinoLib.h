@@ -373,12 +373,6 @@ namespace Reactive
 	{
 		return *(new OperatorRepeat<T>(N));
 	}
-
-	template <typename Torig, typename Tdest>
-	OperatorReduce<Torig, Tdest>& ReduceToFinal(typename OperatorReduce<Torig, Tdest>::ReactiveReduceFunction function, Tdest init)
-	{
-		return *(new OperatorReduce<Torig, Tdest>(function, init));
-	}
 // #pragma endregion
 
 
@@ -399,12 +393,6 @@ namespace Reactive
 	TransformationMap<Torig, Tdest>& Select(ReactiveMap<Torig, Tdest> map)
 	{
 		return *(new TransformationMap<Torig, Tdest>(map));
-	}
-
-	template <typename Torig, typename Tdest>
-	OperatorSelect<Torig, Tdest>& SelectTo(ReactiveMap<Torig, Tdest> selector)
-	{
-		return *(new OperatorSelect<Torig, Tdest>(selector));
 	}
 
 	template <typename Torig, typename Tdest>

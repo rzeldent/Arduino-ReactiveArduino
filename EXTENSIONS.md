@@ -4,22 +4,6 @@ This document provides comprehensive documentation for all the new reactive exte
 
 ## 🔧 Advanced Operators
 
-### OperatorSelect
-Transforms each emitted value using a provided function.
-
-**Signature:**
-```c++
-template<typename Tdest> auto Select(Tdest (*selector)(T)) -> OperatorSelect<T, Tdest>&
-template<typename Tdest> auto SelectTo() -> OperatorSelect<T, Tdest>&
-```
-
-**Example:**
-```c++
-FromArray(values, size)
-.Select<float>([](int x) { return x * 2.5; })  // Convert int to float with scaling
-.Do([](float x) { Serial.println(x); });
-```
-
 ### OperatorDistinct
 Emits only values that haven't been seen before in the stream.
 
@@ -88,25 +72,6 @@ FromArray(values, size)
 - Running totals and counters
 - State machines
 - Progressive calculations
-
-### OperatorReduce
-Accumulates values and emits only the final result.
-
-**Signature:**
-```c++
-template<typename Tdest> auto ReduceToFinal(Tdest (*accumulator)(Tdest, T), Tdest seed) -> OperatorReduce<T, Tdest>&
-```
-
-**Example:**
-```c++
-float multiplyValues(float acc, int current) {
-    return acc * current;
-}
-
-FromArray(values, size)
-.ReduceToFinal<float>(multiplyValues, 1.0)  // Only final product
-.Do([](float x) { Serial.print("Final product: "); Serial.println(x); });
-```
 
 ### OperatorStartWith
 Emits specified values before beginning to emit values from the source observable.
