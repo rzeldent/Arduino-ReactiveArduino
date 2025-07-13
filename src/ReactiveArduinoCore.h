@@ -12,7 +12,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #include "ReactiveArduinoBases.h"
 
-// // #pragma region Forward definitions
+// Forward definitions
 template <typename T> class ObservableRange;
 template <typename T> class ObservableRangeDefer;
 template <typename T> class ObservableArray;
@@ -134,10 +134,8 @@ template <typename T> class ObserverCircularBuffer;
 template <typename T> class ObserverDigitalOutput;
 template <typename T> class ObserverAnalogOutput;
 template <typename T> class ObserverSerial;
-// // #pragma endregion
 
-
-/// Observable base
+// Observable base
 template <typename T>
 class Observable : IObservable<T>, IResetable<T>
 {
