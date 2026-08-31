@@ -23,7 +23,129 @@ More examples in Wiki/[Examples](https://github.com/luisllamasbinaburo/Arduino-R
 ### Observable, observers and operators legend
 More info about the Observables, Observers, and Operators available in the [Wiki](https://github.com/luisllamasbinaburo/Arduino-ReactiveArduino/wiki)
 
-![alt text](https://github.com/luisllamasbinaburo/Arduino-ReactiveArduino/blob/master/ReactiveArduino%20Legend.png "Legend")
+```mermaid
+flowchart LR
+    subgraph OBS[Observables]
+        direction TB
+        Range
+        RangeDefer
+        Array
+        ArrayDefer
+        Property
+        AnalogInput
+        DigitalInput
+        TimerMillis
+        TimerMicros
+        IntervalMillis
+        IntervalMicros
+        SerialChar
+        SerialString
+        SerialInteger
+        SerialFloat
+    end
+
+    subgraph OPR[Operators]
+        direction TB
+        subgraph OPO[Operators]
+            Where
+            Distinct
+            First
+            Last
+            Take
+            TakeAt
+            TakeFirst
+            TakeLast
+            TakeUntil
+            TakeWhile
+            Skip
+            SkipUntil
+            SkipWhile
+            Batch
+            TimeoutMillis
+            TimeoutMicros
+            ForEach
+            If
+            Loop
+            Repeat
+            Reset
+            NoReset
+        end
+        subgraph TRN[Transformations]
+            Select
+            Cast
+            Map
+            Reduce
+            Limit
+            Scale
+            ElapsedMicros
+            ElapsedMillis
+            Micros
+            Millis
+            Frequency
+            Threshold
+            Toggle
+            AdcToVoltage
+            Split
+            Join
+            Buffer
+            ToBool
+            ParseInt
+            ParseFloat
+        end
+        subgraph FLT[Filters]
+            OnRising
+            OnFalling
+            Median3
+            Median5
+            MovingAverage
+            MovingRMS
+            LowPass
+            HighPass
+            PassBand
+            StopBand
+            WindowMillis
+            WindowMicros
+            DebounceMillis
+            DebounceMicros
+            IsLessOrEqual
+            IsLess
+            IsGreaterOrEqual
+            IsGreater
+            IsNotEqual
+            IsEqual
+            IsZero
+            IsNotZero
+        end
+        subgraph AGG[Aggregates]
+            Count
+            Countdown
+            Sum
+            Min
+            Max
+            Average
+            Any
+            RMS
+            All
+            None
+        end
+    end
+
+    subgraph OBV[Observers]
+        direction TB
+        Do
+        Finally
+        DoAndFinally
+        DoNothing
+        Property
+        Array
+        CircularBuffer
+        DigitalOutput
+        AnalogOutput
+        Serial
+    end
+
+    OBS --> OPR --> OBV
+```
 
 ### Creating Observables
 Observables are generally generated through factory methods provided by the Reactive class.
