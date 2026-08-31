@@ -27,6 +27,7 @@ More info about the Observables, Observers, and Operators available in the [Wiki
 flowchart LR
     subgraph OBS[Observables]
         direction TB
+        ManualDefer
         Range
         RangeDefer
         Array
@@ -39,9 +40,11 @@ flowchart LR
         IntervalMillis
         IntervalMicros
         SerialChar
+        SerialByte
         SerialString
         SerialInteger
         SerialFloat
+        SerialDouble
     end
 
     subgraph OPR[Operators]
@@ -76,6 +79,8 @@ flowchart LR
             Map
             Reduce
             Limit
+            LimitLower
+            LimitUpper
             Scale
             ElapsedMicros
             ElapsedMillis
@@ -88,7 +93,10 @@ flowchart LR
             Split
             Join
             Buffer
+            StringBuffer
             ToBool
+            ToInt
+            ToFloat
             ParseInt
             ParseFloat
         end
@@ -173,9 +181,18 @@ Hot observables emits the sequence when an observer subscribes to it. For exampl
 ```c++
 FromArray(values, valuesLength)
 ```
-Cold observable does not emits any item when a observer subscribes to it. You have to explicitly call the `Next()` method whenever you want. For example, `FromArrayDefer(...)`
+Cold observable does not emits any item when a observer subscribes to it. You have to explicitly call the `Next()` method whenever you want. For example, `FromArrayDefer(...)` or `ManualDefer(...)`.
 ```c++
 FromArrayDefer(values, valuesLength)
+```
+
+With `ManualDefer(...)` you also have to explicitly call `Next()` to emit, and `Complete()` to finish the sequence.
+```c++
+auto obs = ManualDefer<int>();
+obs >> ToSerial<int>();
+// ...later in code
+obs.Next();
+obs.Complete();
 ```
 ### Dynamic memory considerations
 On many occasions we generate operators directly when we chain them, for example in the `Setup()`. However, creating an operator allocates dynamic memory. Therefore, you should avoid creating them in `Loop()`, or you could run out of memory.
