@@ -19,7 +19,7 @@ public:
 	void OnNext(T value) override;
 
 private:
-	int _count = false;
+	int _count = 0;
 };
 
 template <typename T>

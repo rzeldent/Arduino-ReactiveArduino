@@ -23,7 +23,137 @@ More examples in Wiki/[Examples](https://github.com/luisllamasbinaburo/Arduino-R
 ### Observable, observers and operators legend
 More info about the Observables, Observers, and Operators available in the [Wiki](https://github.com/luisllamasbinaburo/Arduino-ReactiveArduino/wiki)
 
-![alt text](https://github.com/luisllamasbinaburo/Arduino-ReactiveArduino/blob/master/ReactiveArduino%20Legend.png "Legend")
+```mermaid
+flowchart LR
+    subgraph OBS[Observables]
+        direction TB
+        ManualDefer
+        Range
+        RangeDefer
+        Array
+        ArrayDefer
+        Property
+        AnalogInput
+        DigitalInput
+        TimerMillis
+        TimerMicros
+        IntervalMillis
+        IntervalMicros
+        SerialChar
+        SerialByte
+        SerialString
+        SerialInteger
+        SerialFloat
+        SerialDouble
+    end
+
+    subgraph OPR[Operators]
+        direction TB
+        subgraph OPO[Operators]
+            Where
+            Distinct
+            First
+            Last
+            Take
+            TakeAt
+            TakeFirst
+            TakeLast
+            TakeUntil
+            TakeWhile
+            Skip
+            SkipUntil
+            SkipWhile
+            Batch
+            TimeoutMillis
+            TimeoutMicros
+            ForEach
+            If
+            Loop
+            Repeat
+            Reset
+            NoReset
+        end
+        subgraph TRN[Transformations]
+            Select
+            Cast
+            Map
+            Reduce
+            Limit
+            LimitLower
+            LimitUpper
+            Scale
+            ElapsedMicros
+            ElapsedMillis
+            Micros
+            Millis
+            Frequency
+            Threshold
+            Toggle
+            AdcToVoltage
+            Split
+            Join
+            Buffer
+            StringBuffer
+            ToBool
+            ToInt
+            ToFloat
+            ParseInt
+            ParseFloat
+        end
+        subgraph FLT[Filters]
+            OnRising
+            OnFalling
+            Median3
+            Median5
+            MovingAverage
+            MovingRMS
+            LowPass
+            HighPass
+            PassBand
+            StopBand
+            WindowMillis
+            WindowMicros
+            DebounceMillis
+            DebounceMicros
+            IsLessOrEqual
+            IsLess
+            IsGreaterOrEqual
+            IsGreater
+            IsNotEqual
+            IsEqual
+            IsZero
+            IsNotZero
+        end
+        subgraph AGG[Aggregates]
+            Count
+            Countdown
+            Sum
+            Min
+            Max
+            Average
+            Any
+            RMS
+            All
+            None
+        end
+    end
+
+    subgraph OBV[Observers]
+        direction TB
+        Do
+        Finally
+        DoAndFinally
+        DoNothing
+        Property
+        Array
+        CircularBuffer
+        DigitalOutput
+        AnalogOutput
+        Serial
+    end
+
+    OBS --> OPR --> OBV
+```
 
 ### Creating Observables
 Observables are generally generated through factory methods provided by the Reactive class.
@@ -51,9 +181,18 @@ Hot observables emits the sequence when an observer subscribes to it. For exampl
 ```c++
 FromArray(values, valuesLength)
 ```
-Cold observable does not emits any item when a observer subscribes to it. You have to explicitly call the `Next()` method whenever you want. For example, `FromArrayDefer(...)`
+Cold observable does not emits any item when a observer subscribes to it. You have to explicitly call the `Next()` method whenever you want. For example, `FromArrayDefer(...)` or `ManualDefer(...)`.
 ```c++
 FromArrayDefer(values, valuesLength)
+```
+
+With `ManualDefer(...)` you also have to explicitly call `Next()` to emit, and `Complete()` to finish the sequence.
+```c++
+auto obs = ManualDefer<int>();
+obs >> ToSerial<int>();
+// ...later in code
+obs.Next();
+obs.Complete();
 ```
 ### Dynamic memory considerations
 On many occasions we generate operators directly when we chain them, for example in the `Setup()`. However, creating an operator allocates dynamic memory. Therefore, you should avoid creating them in `Loop()`, or you could run out of memory.

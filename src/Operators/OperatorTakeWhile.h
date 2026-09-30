@@ -36,9 +36,7 @@ void OperatorTakeWhile<T>::OnNext(T value)
 	if (_completed) return;
 
 	if (this->_condition(value))
-	{
 		this->_childObservers.OnNext(value);
-	}
 	else
 	{
 		_completed = true;

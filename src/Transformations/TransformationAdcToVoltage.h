@@ -14,17 +14,17 @@ template <typename T>
 class TransformationAdcToVoltage : public Operator<T, float>
 {
 public:
-	TransformationAdcToVoltage<T>(T input_max = 1023, T output_max = 5.0);
+	TransformationAdcToVoltage<T>(float input_max = 1023.0f, float output_max = 5.0f);
 
 	void OnNext(T value) override;
 
 private:
-	T _input_max = T();
-	T _output_max = T();
+	float _input_max = 0.0f;
+	float _output_max = 0.0f;
 };
 
 template <typename T>
-TransformationAdcToVoltage<T>::TransformationAdcToVoltage(T input_max, T output_max)
+TransformationAdcToVoltage<T>::TransformationAdcToVoltage(float input_max, float output_max)
 {
 	_input_max = input_max;
 	_output_max = output_max;
@@ -34,7 +34,7 @@ TransformationAdcToVoltage<T>::TransformationAdcToVoltage(T input_max, T output_
 template <typename T>
 void TransformationAdcToVoltage<T>::OnNext(T value)
 {
-	this->_childObservers.OnNext((value * _output_max) / _input_max);
+	this->_childObservers.OnNext((static_cast<float>(value) * _output_max) / _input_max);
 }
 
 #endif

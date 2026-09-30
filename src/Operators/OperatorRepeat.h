@@ -38,15 +38,14 @@ void OperatorRepeat<T>::OnNext(T value)
 template <typename T>
 void OperatorRepeat<T>::OnComplete()
 {
-	_repetition--;
+	if (_repetition > 0) _repetition--;
+
 	if (_repetition > 0)
 	{
 		if (this->_parentObservable != nullptr) this->_parentObservable->Reset();
 	}
 	else
-	{
 		this->_childObservers.OnComplete();
-	}
 }
 
 #endif

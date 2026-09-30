@@ -40,9 +40,7 @@ void TransformationJoin<T>::OnNext(T value)
 		_isFirst = false;
 	}
 	else
-	{
 		_buffer = _buffer + _separator + String(value);
-	}
 
 	this->_childObservers.OnNext(_buffer);
 }

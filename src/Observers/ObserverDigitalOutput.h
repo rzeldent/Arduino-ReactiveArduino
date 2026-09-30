@@ -4,12 +4,12 @@
 #define _REACTIVEOBSERVERDIGITALOUTPUT_h
 
 template <typename T>
-class ObserverDigitalOutput : public IObserver<int>
+class ObserverDigitalOutput : public IObserver<T>
 {
 public:
 	ObserverDigitalOutput(uint8_t pin);
 
-	void OnNext(int value) override;
+	void OnNext(T value) override;
 	void OnComplete() override;
 
 private:
@@ -24,7 +24,7 @@ ObserverDigitalOutput<T>::ObserverDigitalOutput(uint8_t pin)
 }
 
 template <typename T>
-void ObserverDigitalOutput<T>::OnNext(int value)
+void ObserverDigitalOutput<T>::OnNext(T value)
 {
 	digitalWrite(_pin, value);
 }

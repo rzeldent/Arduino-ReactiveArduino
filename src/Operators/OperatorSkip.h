@@ -21,7 +21,6 @@ public:
 private:
 	size_t _index = 0;
 	size_t _num_elements = 0;
-	bool _completed = false;
 };
 
 template <typename T>

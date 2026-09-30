@@ -172,8 +172,8 @@ public:
 	OperatorBufferCount<T>& BufferCount(size_t num);
 	OperatorIf<T>& If(ReactivePredicate<T> condition, ReactiveAction<T> action);
 	OperatorForEach<T>& ForEach(ReactiveAction<T> action);
-	OperatorTimeoutMillis<T>& TimeoutMillis(ReactiveAction<T> action);
-	OperatorTimeoutMicros<T>& TimeoutMicros(ReactiveAction<T> action);
+	OperatorTimeoutMillis<T>& TimeoutMillis(unsigned long interval, ReactiveCallback action);
+	OperatorTimeoutMicros<T>& TimeoutMicros(unsigned long interval, ReactiveCallback action);
 	OperatorReset<T>& DoReset();
 	OperatorNoReset<T>& NotReset();
 	OperatorLoop<T>& Loop();
@@ -194,10 +194,10 @@ public:
 	TransformationElapsedMillis<T>& ElapsedMillis();
 	TransformationElapsedMicros<T>& ElapsedMicros();
 	TransformationFrequency<T>& Frequency();
-	TransformationThreshold<T>& Threshold(T threshold, int state = LOW);
-	TransformationThreshold<T>& DoubleThreshold(T lowThreshold, T highThreshold, int state = LOW);
-	TransformationToggle<T>& Toggle(int state = LOW);
-	TransformationAdcToVoltage<T>& AdcToVoltage(T input_max = 1023, T output_max = 5.0);
+	TransformationThreshold<T>& Threshold(T threshold, bool state = false);
+	TransformationThreshold<T>& DoubleThreshold(T lowThreshold, T highThreshold, bool state = false);
+	TransformationToggle<T>& Toggle(bool state = false);
+	TransformationAdcToVoltage<T>& AdcToVoltage(float input_max = 1023.0f, float output_max = 5.0f);
 	TransformationSplit<T>& Split(char separator = ',');
 	TransformationJoin<T>& Join(char separator = ',');
 	TransformationStringBuffer <T>& StringBuffer();
@@ -241,7 +241,7 @@ public:
 	AggregateAll<T>& All(ReactivePredicate<T> condition);
 	AggregateNone<T>& None(ReactivePredicate<T> condition);
 
-	ObserverSerial<T> ToSerial();
+	ObserverSerial<T>& ToSerial();
 	ObserverDo<T>& Do(ReactiveAction<T> action);
 	ObserverFinally<T>& Finally(ReactiveCallback action);
 	ObserverDoAndFinally<T>& DoAndFinally(ReactiveAction<T> doAction, ReactiveCallback finallyAction);
@@ -405,17 +405,17 @@ auto Observable<T>::ForEach(ReactiveAction<T> action) -> OperatorForEach<T>&
 }
 
 template <typename T>
-auto Observable<T>::TimeoutMillis(ReactiveAction<T> action) -> OperatorTimeoutMillis<T>&
+auto Observable<T>::TimeoutMillis(unsigned long interval, ReactiveCallback action) -> OperatorTimeoutMillis<T>&
 {
-	auto newOp = new OperatorTimeoutMillis<T>(action);
+	auto newOp = new OperatorTimeoutMillis<T>(interval, action);
 	Compound(*this, *newOp);
 	return *newOp;
 }
 
 template <typename T>
-auto Observable<T>::TimeoutMicros(ReactiveAction<T> action) -> OperatorTimeoutMicros<T>&
+auto Observable<T>::TimeoutMicros(unsigned long interval, ReactiveCallback action) -> OperatorTimeoutMicros<T>&
 {
-	auto newOp = new OperatorTimeoutMicros<T>(action);
+	auto newOp = new OperatorTimeoutMicros<T>(interval, action);
 	Compound(*this, *newOp);
 	return *newOp;
 }
@@ -580,7 +580,7 @@ auto Observable<T>::Frequency() -> TransformationFrequency<T>&
 }
 
 template <typename T>
-auto Observable<T>::Threshold(T threshold, int state) -> TransformationThreshold<T>&
+auto Observable<T>::Threshold(T threshold, bool state) -> TransformationThreshold<T>&
 {
 	auto newOp = new TransformationThreshold<T>(threshold, state);
 	Compound(*this, *newOp);
@@ -588,7 +588,7 @@ auto Observable<T>::Threshold(T threshold, int state) -> TransformationThreshold
 }
 
 template <typename T>
-auto Observable<T>::DoubleThreshold(T lowThreshold, T highThreshold, int state) -> TransformationThreshold<T>&
+auto Observable<T>::DoubleThreshold(T lowThreshold, T highThreshold, bool state) -> TransformationThreshold<T>&
 {
 	auto newOp = new TransformationThreshold<T>(lowThreshold, highThreshold, state);
 	Compound(*this, *newOp);
@@ -596,7 +596,7 @@ auto Observable<T>::DoubleThreshold(T lowThreshold, T highThreshold, int state) 
 }
 
 template <typename T>
-auto Observable<T>::Toggle(int state) -> TransformationToggle<T>&
+auto Observable<T>::Toggle(bool state) -> TransformationToggle<T>&
 {
 	auto newOp = new TransformationToggle<T>(state);
 	Compound(*this, *newOp);
@@ -604,7 +604,7 @@ auto Observable<T>::Toggle(int state) -> TransformationToggle<T>&
 }
 
 template <typename T>
-auto Observable<T>::AdcToVoltage(T input_max, T output_max) -> TransformationAdcToVoltage<T>&
+auto Observable<T>::AdcToVoltage(float input_max, float output_max) -> TransformationAdcToVoltage<T>&
 {
 	auto newOp = new TransformationAdcToVoltage<T>(input_max, output_max);
 	Compound(*this, *newOp);
@@ -932,7 +932,7 @@ auto Observable<T>::None(ReactivePredicate<T> condition) -> AggregateNone<T>&
 }
 
 template <typename T>
-auto Observable<T>::ToSerial() -> ObserverSerial<T>
+auto Observable<T>::ToSerial() -> ObserverSerial<T>&
 {
 	auto newOp = new ObserverSerial<T>();
 	Subscribe(*newOp);
