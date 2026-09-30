@@ -33,7 +33,7 @@ void AggregateAverage<T>::OnNext(T value)
 {
 	_sum += value;
 	_count++;
-	this->_childObservers.OnNext(_sum / _count);
+	this->_childObservers.OnNext(_sum / static_cast<T>(_count));
 }
 
 #endif
