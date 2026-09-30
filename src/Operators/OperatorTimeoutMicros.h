@@ -22,7 +22,7 @@ public:
 
 private:
 	ReactiveCallback _doAction;
-	unsigned long _starTime;
+	unsigned long _startTime;
 	unsigned long _interval;
 	bool _completed = false;
 };
@@ -32,13 +32,13 @@ OperatorTimeoutMicros<T>::OperatorTimeoutMicros(unsigned long interval, Reactive
 {
 	_doAction = action;
 	_interval = interval;
-	_starTime = micros();
+	_startTime = micros();
 }
 
 template <typename T>
 void OperatorTimeoutMicros<T>::OnNext(T value)
 {
-	_starTime = micros();
+	_startTime = micros();
 
 	this->_childObservers.OnNext(value);
 }
@@ -55,7 +55,7 @@ inline void OperatorTimeoutMicros<T>::Update()
 {
 	if (_completed) return;
 
-	if (micros() - _starTime > _interval)
+	if (micros() - _startTime > _interval)
 	{
 		if (_doAction != nullptr) _doAction();
 		_completed = true;

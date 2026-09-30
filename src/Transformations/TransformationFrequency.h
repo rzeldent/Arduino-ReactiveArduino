@@ -27,25 +27,25 @@ public:
 	void Reset() override;
 
 private:
-	unsigned long _starTime;
+	unsigned long _startTime;
 };
 
 template <typename T>
 TransformationFrequency<T>::TransformationFrequency()
 {
-	_starTime = millis();
+	_startTime = millis();
 }
 
 template <typename T>
 void TransformationFrequency<T>::Reset()
 {
-	_starTime = millis();
+	_startTime = millis();
 }
 
 template <typename T>
 void TransformationFrequency<T>::OnNext(T value)
 {
-	this->_childObservers.OnNext(1000.0 / (millis() - _starTime));
-	_starTime = millis();
+	this->_childObservers.OnNext(1000.0 / (millis() - _startTime));
+	_startTime = millis();
 }
 #endif

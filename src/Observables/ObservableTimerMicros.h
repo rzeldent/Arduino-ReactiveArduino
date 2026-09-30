@@ -46,6 +46,7 @@ template <typename T>
 ObservableTimerMicros<T>::ObservableTimerMicros(unsigned long interval, unsigned long delay)
 {
 	_isActive = true;
+	_isExpired = false;
 	_delay = delay;
 	_offset = delay;
 	_interval = interval;
@@ -68,18 +69,21 @@ template <typename T>
 void ObservableTimerMicros<T>::Update()
 {
 	if (_isActive == false) return;
+	if (_isExpired) return;
 
 	auto elapsed = static_cast<unsigned long>(micros() - _startTime);
 	if (elapsed >= _interval + _offset)
 	{
 		this->_childObservers.OnNext(elapsed);
+		_isExpired = true;
 		_offset = 0;
 	}
 }
 
 template <typename T>
 void ObservableTimerMicros<T>::Reset()
-{
+{isExpired = false;
+	_
 	_isActive = true;
 	_offset = _delay;
 	_startTime = micros();
@@ -118,7 +122,9 @@ unsigned long ObservableTimerMicros<T>::GetElapsedTime() const
 
 template <typename T>
 unsigned long ObservableTimerMicros<T>::GetRemainingTime() const
-{
+{unsigned long elapsed = micros() - _startTime;
+	if (elapsed >= _interval) return 0;
+	return _interval - elapsed
 	return _interval - micros() + _startTime;
 }
 

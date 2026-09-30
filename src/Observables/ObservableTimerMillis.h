@@ -46,6 +46,7 @@ template <typename T>
 ObservableTimerMillis<T>::ObservableTimerMillis(unsigned long interval, unsigned long delay)
 {
 	_isActive = true;
+	_isExpired = false;
 	_delay = delay;
 	_offset = delay;
 	_interval = interval;
@@ -68,11 +69,13 @@ template <typename T>
 void ObservableTimerMillis<T>::Update()
 {
 	if (_isActive == false) return;
+	if (_isExpired) return;
 
 	auto elapsed = static_cast<unsigned long>(millis() - _startTime);
 	if (elapsed >= _interval + _offset)
 	{
 		this->_childObservers.OnNext(elapsed);
+		_isExpired = true;
 		_offset = 0;
 	}
 }
@@ -81,6 +84,7 @@ template <typename T>
 void ObservableTimerMillis<T>::Reset()
 {
 	_isActive = true;
+	_isExpired = false;
 	_offset = _delay;
 	_startTime = millis();
 }
@@ -119,7 +123,9 @@ unsigned long ObservableTimerMillis<T>::GetElapsedTime() const
 template <typename T>
 unsigned long ObservableTimerMillis<T>::GetRemainingTime() const
 {
-	return _interval - millis() + _startTime;
+	unsigned long elapsed = millis() - _startTime;
+	if (elapsed >= _interval) return 0;
+	return _interval - elapsed;
 }
 
 template <typename T>

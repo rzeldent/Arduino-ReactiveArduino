@@ -22,7 +22,7 @@ public:
 
 private:
 	ReactiveCallback _doAction;
-	unsigned long _starTime;
+	unsigned long _startTime;
 	unsigned long _interval;
 	bool _completed = false;
 };
@@ -32,13 +32,13 @@ OperatorTimeoutMillis<T>::OperatorTimeoutMillis(unsigned long interval, Reactive
 {
 	_doAction = action;
 	_interval = interval;
-	_starTime = millis();
+	_startTime = millis();
 }
 
 template <typename T>
 void OperatorTimeoutMillis<T>::OnNext(T value)
 {
-	_starTime = millis();
+	_startTime = millis();
 
 	this->_childObservers.OnNext(value);
 }
@@ -55,7 +55,7 @@ inline void OperatorTimeoutMillis<T>::Update()
 {
 	if (_completed) return;
 
-	if (millis() - _starTime > _interval)
+	if (millis() - _startTime > _interval)
 	{
 		if (_doAction != nullptr) _doAction();
 		_completed = true;
