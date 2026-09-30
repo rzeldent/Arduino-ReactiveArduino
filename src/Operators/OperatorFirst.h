@@ -45,6 +45,8 @@ void OperatorFirst<T>::OnComplete()
 {
 	if (_any)
 		this->_childObservers.OnNext(_first);
+
+	this->_childObservers.OnComplete();
 }
 
 #endif

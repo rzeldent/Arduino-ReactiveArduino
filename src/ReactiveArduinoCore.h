@@ -168,8 +168,8 @@ public:
 	OperatorBatch<T>& Batch(size_t num);
 	OperatorIf<T>& If(ReactivePredicate<T> condition, ReactiveAction<T> action);
 	OperatorForEach<T>& ForEach(ReactiveAction<T> action);
-	OperatorTimeoutMillis<T>& TimeoutMillis(ReactiveAction<T> action);
-	OperatorTimeoutMicros<T>& TimeoutMicros(ReactiveAction<T> action);
+	OperatorTimeoutMillis<T>& TimeoutMillis(unsigned long interval, ReactiveCallback action);
+	OperatorTimeoutMicros<T>& TimeoutMicros(unsigned long interval, ReactiveCallback action);
 	OperatorReset<T>& DoReset();
 	OperatorNoReset<T>& NotReset();
 	OperatorLoop<T>& Loop();
@@ -385,17 +385,17 @@ auto Observable<T>::ForEach(ReactiveAction<T> action) -> OperatorForEach<T>&
 }
 
 template <typename T>
-auto Observable<T>::TimeoutMillis(ReactiveAction<T> action) -> OperatorTimeoutMillis<T>&
+auto Observable<T>::TimeoutMillis(unsigned long interval, ReactiveCallback action) -> OperatorTimeoutMillis<T>&
 {
-	auto newOp = new OperatorTimeoutMillis<T>(action);
+	auto newOp = new OperatorTimeoutMillis<T>(interval, action);
 	Compound(*this, *newOp);
 	return *newOp;
 }
 
 template <typename T>
-auto Observable<T>::TimeoutMicros(ReactiveAction<T> action) -> OperatorTimeoutMicros<T>&
+auto Observable<T>::TimeoutMicros(unsigned long interval, ReactiveCallback action) -> OperatorTimeoutMicros<T>&
 {
-	auto newOp = new OperatorTimeoutMicros<T>(action);
+	auto newOp = new OperatorTimeoutMicros<T>(interval, action);
 	Compound(*this, *newOp);
 	return *newOp;
 }

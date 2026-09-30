@@ -314,15 +314,15 @@ namespace Reactive
 	}
 
 	template <typename T>
-	OperatorTimeoutMillis<T>& TimeoutMillis(ReactiveAction<T> action)
+	OperatorTimeoutMillis<T>& TimeoutMillis(unsigned long interval, ReactiveCallback action)
 	{
-		return *(new OperatorTimeoutMillis<T>(action));
+		return *(new OperatorTimeoutMillis<T>(interval, action));
 	}
 
 	template <typename T>
-	OperatorTimeoutMicros<T>& TimeoutMicros(ReactiveAction<T> action)
+	OperatorTimeoutMicros<T>& TimeoutMicros(unsigned long interval, ReactiveCallback action)
 	{
-		return *(new OperatorTimeoutMicros<T>(action));
+		return *(new OperatorTimeoutMicros<T>(interval, action));
 	}
 
 	template <typename T>

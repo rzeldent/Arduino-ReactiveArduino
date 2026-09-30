@@ -14,21 +14,21 @@ template <typename T>
 class OperatorTimeoutMicros : public Operator<T, T>
 {
 public:
-	OperatorTimeoutMicros(unsigned long interval, ReactiveAction<T> action);
+	OperatorTimeoutMicros(unsigned long interval, ReactiveCallback action);
 
 	void OnNext(T value) override;
 	void OnComplete() override;
 	void Update();
 
 private:
-	ReactiveAction<T> _doAction;
+	ReactiveCallback _doAction;
 	unsigned long _starTime;
 	unsigned long _interval;
 	bool _completed = false;
 };
 
 template <typename T>
-OperatorTimeoutMicros<T>::OperatorTimeoutMicros(unsigned long interval, ReactiveAction<T> action)
+OperatorTimeoutMicros<T>::OperatorTimeoutMicros(unsigned long interval, ReactiveCallback action)
 {
 	_doAction = action;
 	_interval = interval;
@@ -38,7 +38,6 @@ OperatorTimeoutMicros<T>::OperatorTimeoutMicros(unsigned long interval, Reactive
 template <typename T>
 void OperatorTimeoutMicros<T>::OnNext(T value)
 {
-	_doAction(value);
 	_starTime = micros();
 
 	this->_childObservers.OnNext(value);
@@ -56,7 +55,7 @@ inline void OperatorTimeoutMicros<T>::Update()
 {
 	if (_completed) return;
 
-	if (millis() - _starTime > _interval)
+	if (micros() - _starTime > _interval)
 	{
 		if (_doAction != nullptr) _doAction();
 		_completed = true;

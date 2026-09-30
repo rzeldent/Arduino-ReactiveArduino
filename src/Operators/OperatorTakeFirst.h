@@ -33,6 +33,7 @@ void OperatorTakeFirst<T>::OnNext(T value)
 	if (_completed) return;
 
 	this->_childObservers.OnNext(value);
+	this->_childObservers.OnComplete();
 	_completed = true;
 }
 

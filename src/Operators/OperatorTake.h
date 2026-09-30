@@ -35,17 +35,21 @@ void OperatorTake<T>::OnNext(T value)
 {
 	if (_completed) return;
 
-	if (_index < _num_elements)
+	if (_num_elements == 0)
 	{
-		this->_childObservers.OnNext(value);
+		this->_childObservers.OnComplete();
+		_completed = true;
+		return;
 	}
-	else
+
+	this->_childObservers.OnNext(value);
+	_index++;
+
+	if (_index >= _num_elements)
 	{
 		this->_childObservers.OnComplete();
 		_completed = true;
 	}
-
-	_index++;
 }
 
 #endif
