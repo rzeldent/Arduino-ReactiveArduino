@@ -192,8 +192,8 @@ public:
 	TransformationFrequency<T>& Frequency();
 	TransformationThreshold<T>& Threshold(T threshold, int state = LOW);
 	TransformationThreshold<T>& DoubleThreshold(T lowThreshold, T highThreshold, int state = LOW);
-	TransformationToggle<T>& Toggle(int state = LOW);
-	TransformationAdcToVoltage<T>& AdcToVoltage(T input_max = 1023, T output_max = 5.0);
+	TransformationToggle<T>& Toggle(bool state = false);
+	TransformationAdcToVoltage<T>& AdcToVoltage(float input_max = 1023.0f, float output_max = 5.0f);
 	TransformationSplit<T>& Split(char separator = ',');
 	TransformationJoin<T>& Join(char separator = ',');
 	TransformationStringBuffer <T>& StringBuffer();
@@ -576,7 +576,7 @@ auto Observable<T>::DoubleThreshold(T lowThreshold, T highThreshold, int state) 
 }
 
 template <typename T>
-auto Observable<T>::Toggle(int state) -> TransformationToggle<T>&
+auto Observable<T>::Toggle(bool state) -> TransformationToggle<T>&
 {
 	auto newOp = new TransformationToggle<T>(state);
 	Compound(*this, *newOp);
@@ -584,7 +584,7 @@ auto Observable<T>::Toggle(int state) -> TransformationToggle<T>&
 }
 
 template <typename T>
-auto Observable<T>::AdcToVoltage(T input_max, T output_max) -> TransformationAdcToVoltage<T>&
+auto Observable<T>::AdcToVoltage(float input_max, float output_max) -> TransformationAdcToVoltage<T>&
 {
 	auto newOp = new TransformationAdcToVoltage<T>(input_max, output_max);
 	Compound(*this, *newOp);

@@ -45,7 +45,8 @@ void TransformationFrequency<T>::Reset()
 template <typename T>
 void TransformationFrequency<T>::OnNext(T value)
 {
-	this->_childObservers.OnNext(1000.0 / (millis() - _startTime));
+	unsigned long elapsed = millis() - _startTime;
+	this->_childObservers.OnNext(elapsed > 0 ? 1000.0f / elapsed : 0.0f);
 	_startTime = millis();
 }
 #endif

@@ -14,18 +14,18 @@ template <typename T>
 class TransformationToggle : public Operator<T, int>
 {
 public:
-	TransformationToggle(int state = LOW);
+	TransformationToggle(bool state = false);
 
 	void OnNext(T value) override;
 
 private:
-	int _state = false;
+	bool _state = false;
 };
 
 template <typename T>
-TransformationToggle<T>::TransformationToggle(int state)
+TransformationToggle<T>::TransformationToggle(bool state)
 {
-	_state = false;
+	_state = state;
 }
 
 template <typename T>

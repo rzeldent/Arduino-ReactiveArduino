@@ -473,7 +473,7 @@ namespace Reactive
 	}
 
 	template <typename T>
-	TransformationAdcToVoltage<T>& AdcToVoltage(T input_max = 1023, T output_max = 5.0)
+	TransformationAdcToVoltage<T>& AdcToVoltage(float input_max = 1023.0f, float output_max = 5.0f)
 	{
 		return *(new TransformationAdcToVoltage<T>(input_max, output_max));
 	}
