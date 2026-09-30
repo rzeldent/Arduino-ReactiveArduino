@@ -111,7 +111,7 @@ namespace Reactive
 	template <typename T>
 	auto FromSerial(char separator) -> ObservableSerial<T>&
 	{
-		return *(new ObservableSerial<String>());
+		return *(new ObservableSerial<T>(separator));
 	}
 
 	template <>

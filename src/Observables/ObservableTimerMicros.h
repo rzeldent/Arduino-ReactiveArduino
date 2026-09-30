@@ -82,9 +82,9 @@ void ObservableTimerMicros<T>::Update()
 
 template <typename T>
 void ObservableTimerMicros<T>::Reset()
-{isExpired = false;
-	_
+{
 	_isActive = true;
+	_isExpired = false;
 	_offset = _delay;
 	_startTime = micros();
 }
@@ -122,10 +122,10 @@ unsigned long ObservableTimerMicros<T>::GetElapsedTime() const
 
 template <typename T>
 unsigned long ObservableTimerMicros<T>::GetRemainingTime() const
-{unsigned long elapsed = micros() - _startTime;
+{
+	unsigned long elapsed = micros() - _startTime;
 	if (elapsed >= _interval) return 0;
-	return _interval - elapsed
-	return _interval - micros() + _startTime;
+	return _interval - elapsed;
 }
 
 template <typename T>
