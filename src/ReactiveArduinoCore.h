@@ -237,7 +237,7 @@ public:
 	AggregateAll<T>& All(ReactivePredicate<T> condition);
 	AggregateNone<T>& None(ReactivePredicate<T> condition);
 
-	ObserverSerial<T> ToSerial();
+	ObserverSerial<T>& ToSerial();
 	ObserverDo<T>& Do(ReactiveAction<T> action);
 	ObserverFinally<T>& Finally(ReactiveCallback action);
 	ObserverDoAndFinally<T>& DoAndFinally(ReactiveAction<T> doAction, ReactiveCallback finallyAction);
@@ -912,7 +912,7 @@ auto Observable<T>::None(ReactivePredicate<T> condition) -> AggregateNone<T>&
 }
 
 template <typename T>
-auto Observable<T>::ToSerial() -> ObserverSerial<T>
+auto Observable<T>::ToSerial() -> ObserverSerial<T>&
 {
 	auto newOp = new ObserverSerial<T>();
 	Subscribe(*newOp);
