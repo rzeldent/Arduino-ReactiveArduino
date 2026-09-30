@@ -14,32 +14,31 @@ template <typename T>
 class OperatorTimeoutMillis : public Operator<T, T>
 {
 public:
-	OperatorTimeoutMillis(unsigned long interval, ReactiveAction<T> action);
+	OperatorTimeoutMillis(unsigned long interval, ReactiveCallback action);
 
 	void OnNext(T value) override;
 	void OnComplete() override;
 	void Update();
 
 private:
-	ReactiveAction<T> _doAction;
-	unsigned long _starTime;
+	ReactiveCallback _doAction;
+	unsigned long _startTime;
 	unsigned long _interval;
 	bool _completed = false;
 };
 
 template <typename T>
-OperatorTimeoutMillis<T>::OperatorTimeoutMillis(unsigned long interval, ReactiveAction<T> action)
+OperatorTimeoutMillis<T>::OperatorTimeoutMillis(unsigned long interval, ReactiveCallback action)
 {
 	_doAction = action;
 	_interval = interval;
-	_starTime = millis();
+	_startTime = millis();
 }
 
 template <typename T>
 void OperatorTimeoutMillis<T>::OnNext(T value)
 {
-	_doAction(value);
-	_starTime = millis();
+	_startTime = millis();
 
 	this->_childObservers.OnNext(value);
 }
@@ -56,7 +55,7 @@ inline void OperatorTimeoutMillis<T>::Update()
 {
 	if (_completed) return;
 
-	if (millis() - _starTime > _interval)
+	if (millis() - _startTime > _interval)
 	{
 		if (_doAction != nullptr) _doAction();
 		_completed = true;

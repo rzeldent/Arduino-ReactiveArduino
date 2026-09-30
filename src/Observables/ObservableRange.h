@@ -54,8 +54,16 @@ void ObservableRange<T>::UnSubscribe(IObserver<T> &observer)
 template<typename T>
 void ObservableRange<T>::Run()
 {
-	for (auto i = _start; i <= _end; i += _step)
-		this->_childObservers.OnNext(i);
+	if (_step > 0)
+	{
+		for (auto i = _start; i <= _end; i += _step)
+			this->_childObservers.OnNext(i);
+	}
+	else if (_step < 0)
+	{
+		for (auto i = _start; i >= _end; i += _step)
+			this->_childObservers.OnNext(i);
+	}
 
 	this->_childObservers.OnComplete();
 }

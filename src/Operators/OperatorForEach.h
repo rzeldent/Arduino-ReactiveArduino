@@ -40,6 +40,7 @@ void OperatorForEach<T>::OnNext(T value)
 template <typename T>
 inline void OperatorForEach<T>::OnComplete()
 {
+	this->_childObservers.OnComplete();
 }
 
 #endif

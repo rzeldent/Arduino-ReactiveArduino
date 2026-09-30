@@ -33,7 +33,7 @@ void AggregateRMS<T>::OnNext(T value)
 {
 	_sumSqr += value * value;
 	_count++;
-	this->_childObservers.OnNext(sqrt(_sumSqr / _count));
+	this->_childObservers.OnNext(static_cast<T>(sqrt(static_cast<double>(_sumSqr) / static_cast<double>(_count))));
 }
 
 #endif

@@ -12,6 +12,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #include "OperatorWhere.h"
 #include "OperatorDistinct.h"
+#include "OperatorDistinctUntilChanged.h"
 
 #include "OperatorLast.h"
 #include "OperatorFirst.h"
@@ -19,6 +20,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #include "OperatorTake.h"
 #include "OperatorSkip.h"
 #include "OperatorBatch.h"
+#include "OperatorBufferCount.h"
 
 #include "OperatorTakeAt.h"
 #include "OperatorTakeFirst.h"

@@ -15,8 +15,8 @@ class ObservableSerial<byte> : public Observable<byte>
 {
 public:
 	ObservableSerial();
-	void Subscribe(IObserver<byte> &observer);
-	void UnSubscribe(IObserver<byte> &observer);
+	void Subscribe(IObserver<byte> &observer) override;
+	void UnSubscribe(IObserver<byte> &observer) override;
 	void Receive();
 
 private:

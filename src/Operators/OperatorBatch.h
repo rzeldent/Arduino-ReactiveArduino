@@ -32,16 +32,14 @@ OperatorBatch<T>::OperatorBatch(size_t N)
 template <typename T>
 void OperatorBatch<T>::OnNext(T value)
 {
-	if (_index < _num_elements)
-	{
-		this->_childObservers.OnNext(value);
-		_index++;
-	}
-	else
+	if (_index >= _num_elements)
 	{
 		_index = 0;
 		this->_childObservers.OnComplete();
 	}
+
+	this->_childObservers.OnNext(value);
+	_index++;
 }
 
 #endif

@@ -5,7 +5,7 @@ Copyright (c) 2019 Luis Llamas
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License
- ****************************************************/
+****************************************************/
 
 #ifndef _REACTIVEARDUINOLIB_h
 #define _REACTIVEARDUINOLIB_h
@@ -17,6 +17,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #else
 	#include "WProgram.h"
 #endif
+
+#include <set>
+#include <vector>
 
 namespace Reactive
 {
@@ -111,7 +114,7 @@ namespace Reactive
 	template <typename T>
 	auto FromSerial(char separator) -> ObservableSerial<T>&
 	{
-		return *(new ObservableSerial<String>());
+		return *(new ObservableSerial<T>(separator));
 	}
 
 	template <>
@@ -224,6 +227,12 @@ namespace Reactive
 	}
 
 	template <typename T>
+	OperatorDistinctUntilChanged<T>& DistinctUntilChanged()
+	{
+		return *(new OperatorDistinctUntilChanged<T>());
+	}
+
+	template <typename T>
 	OperatorFirst<T>& First()
 	{
 		return *(new OperatorFirst<T>());
@@ -314,15 +323,15 @@ namespace Reactive
 	}
 
 	template <typename T>
-	OperatorTimeoutMillis<T>& TimeoutMillis(ReactiveAction<T> action)
+	OperatorTimeoutMillis<T>& TimeoutMillis(unsigned long interval, ReactiveCallback action)
 	{
-		return *(new OperatorTimeoutMillis<T>(action));
+		return *(new OperatorTimeoutMillis<T>(interval, action));
 	}
 
 	template <typename T>
-	OperatorTimeoutMicros<T>& TimeoutMicros(ReactiveAction<T> action)
+	OperatorTimeoutMicros<T>& TimeoutMicros(unsigned long interval, ReactiveCallback action)
 	{
-		return *(new OperatorTimeoutMicros<T>(action));
+		return *(new OperatorTimeoutMicros<T>(interval, action));
 	}
 
 	template <typename T>
@@ -457,7 +466,7 @@ namespace Reactive
 	template <typename T>
 	TransformationThreshold<T>& DoubleThreshold(T lowThreshold, T highThreshold)
 	{
-		return *(new TransformationThreshold<T>(lowThreshold, highThreshold));
+		return *(new TransformationThreshold<T>(lowThreshold, highThreshold, false));
 	}
 
 	template <typename T>
@@ -473,7 +482,7 @@ namespace Reactive
 	}
 
 	template <typename T>
-	TransformationAdcToVoltage<T>& AdcToVoltage(T input_max = 1023, T output_max = 5.0)
+	TransformationAdcToVoltage<T>& AdcToVoltage(float input_max = 1023.0f, float output_max = 5.0f)
 	{
 		return *(new TransformationAdcToVoltage<T>(input_max, output_max));
 	}

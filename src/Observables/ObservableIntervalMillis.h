@@ -33,7 +33,6 @@ public:
 
 private:
 	bool _isActive;
-	bool _isExpired;
 	unsigned long _startTime;
 	unsigned long _delay;
 	unsigned long _offset;
@@ -121,7 +120,9 @@ unsigned long ObservableIntervalMillis<T>::GetElapsedTime()
 template <typename T>
 unsigned long ObservableIntervalMillis<T>::GetRemainingTime()
 {
-	return _interval - millis() + _startTime;
+	unsigned long elapsed = millis() - _startTime;
+	if (elapsed >= _interval) return 0;
+	return _interval - elapsed;
 }
 
 template <typename T>

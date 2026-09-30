@@ -23,7 +23,7 @@ public:
 private:
 	char _separator;
 
-	float _data = 0;
+	double _data = 0;
 	int _dataReal = 0;
 	int _dataDecimal = 0;
 	int _dataPow = 1;

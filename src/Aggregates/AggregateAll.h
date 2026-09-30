@@ -33,7 +33,7 @@ AggregateAll<T>::AggregateAll(ReactivePredicate<T> condition)
 template <typename T>
 void AggregateAll<T>::OnNext(T value)
 {
-	if (_state && _condition(value)) _state = false;
+	if (!_condition(value)) _state = false;
 
 	this->_childObservers.OnNext(_state);
 }

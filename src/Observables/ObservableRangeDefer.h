@@ -53,13 +53,14 @@ void ObservableRangeDefer<T>::UnSubscribe(IObserver<T> &observer)
 template <typename T>
 void ObservableRangeDefer<T>::Next()
 {
-	if (_value > _end) return;
+	if (_step > 0 && _value > _end) return;
+	if (_step < 0 && _value < _end) return;
 
 	T value = _value;
 	this->_childObservers.OnNext(value);
 	_value += _step;
 
-	if (_value > _end)
+	if ((_step > 0 && _value > _end) || (_step < 0 && _value < _end))
 		this->_childObservers.OnComplete();
 }
 
