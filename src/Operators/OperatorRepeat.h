@@ -45,9 +45,7 @@ void OperatorRepeat<T>::OnComplete()
 		if (this->_parentObservable != nullptr) this->_parentObservable->Reset();
 	}
 	else
-	{
 		this->_childObservers.OnComplete();
-	}
 }
 
 #endif

@@ -47,9 +47,7 @@ inline void ObservableSerial<String>::Receive()
 	{
 		const char newChar = Serial.read();
 		if (newChar != _separator)
-		{
 			_buffer.concat(newChar);
-		}
 		else
 		{
 			_childObservers.OnNext(_buffer);

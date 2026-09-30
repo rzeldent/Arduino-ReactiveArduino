@@ -190,8 +190,8 @@ public:
 	TransformationElapsedMillis<T>& ElapsedMillis();
 	TransformationElapsedMicros<T>& ElapsedMicros();
 	TransformationFrequency<T>& Frequency();
-	TransformationThreshold<T>& Threshold(T threshold, int state = LOW);
-	TransformationThreshold<T>& DoubleThreshold(T lowThreshold, T highThreshold, int state = LOW);
+	TransformationThreshold<T>& Threshold(T threshold, bool state = false);
+	TransformationThreshold<T>& DoubleThreshold(T lowThreshold, T highThreshold, bool state = false);
 	TransformationToggle<T>& Toggle(bool state = false);
 	TransformationAdcToVoltage<T>& AdcToVoltage(float input_max = 1023.0f, float output_max = 5.0f);
 	TransformationSplit<T>& Split(char separator = ',');
@@ -560,7 +560,7 @@ auto Observable<T>::Frequency() -> TransformationFrequency<T>&
 }
 
 template <typename T>
-auto Observable<T>::Threshold(T threshold, int state) -> TransformationThreshold<T>&
+auto Observable<T>::Threshold(T threshold, bool state) -> TransformationThreshold<T>&
 {
 	auto newOp = new TransformationThreshold<T>(threshold, state);
 	Compound(*this, *newOp);
@@ -568,7 +568,7 @@ auto Observable<T>::Threshold(T threshold, int state) -> TransformationThreshold
 }
 
 template <typename T>
-auto Observable<T>::DoubleThreshold(T lowThreshold, T highThreshold, int state) -> TransformationThreshold<T>&
+auto Observable<T>::DoubleThreshold(T lowThreshold, T highThreshold, bool state) -> TransformationThreshold<T>&
 {
 	auto newOp = new TransformationThreshold<T>(lowThreshold, highThreshold, state);
 	Compound(*this, *newOp);

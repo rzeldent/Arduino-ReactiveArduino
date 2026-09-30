@@ -457,7 +457,7 @@ namespace Reactive
 	template <typename T>
 	TransformationThreshold<T>& DoubleThreshold(T lowThreshold, T highThreshold)
 	{
-		return *(new TransformationThreshold<T>(lowThreshold, highThreshold));
+		return *(new TransformationThreshold<T>(lowThreshold, highThreshold, false));
 	}
 
 	template <typename T>
